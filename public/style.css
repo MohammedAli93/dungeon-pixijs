@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "Magra-Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: local("fonts/Magra-Regular"),
+    url("fonts/Magra-Regular.ttf") format("truetype");
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
