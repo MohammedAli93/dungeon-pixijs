@@ -30,36 +30,12 @@ export class Character {
     this.avatar.preFX?.addGlow(randomHexColor, 2, 0, false, 0.1, 32);
     this.avatar.setDepth(1);
 
-    // // ➕ Create a dynamic shadow using graphics
-    // const avatarWidth = this.avatar.displayWidth;
-
-    // // Create graphics
-    // const shadowGraphics = this.scene.add.graphics();
-    // shadowGraphics.fillStyle(0x000000, 0.4); // Black with alpha
-
-    // // Draw ellipse
-    // const shadowWidth = avatarWidth * 1.2;
-    // const shadowHeight = shadowWidth * 0.25;
-    // shadowGraphics.fillEllipse(0, 0, shadowWidth, shadowHeight);
-
-    // // Generate texture from graphics
-    // const shadowKey = `shadow-${Phaser.Math.RND.uuid()}`;
-    // shadowGraphics.generateTexture(shadowKey, shadowWidth, shadowHeight);
-    // shadowGraphics.destroy(); // Remove graphics to save memory
-
-    // // Create image from texture
-    // const shadow = this.scene.add.image(x, y, shadowKey);
-    // shadow.setOrigin(0.5, 0.5);
-    // shadow.setDepth(this.avatar.depth - 1); // Behind avatar
-
     // Particles
-    // === Particle burst (1-time) ===
     const shape = new Phaser.Geom.Ellipse(0, 0, this.avatar.displayWidth / 2 / 2, this.avatar.displayHeight / 2);
     const particles = this.scene.add.particles(x, y - this.avatar.displayHeight / 2, "particle", {
       lifespan: 5000,
       speed: { min: 15, max: 35 },
       scale: { start: 0.8, end: 0 },
-      // gravityY: 1,
       blendMode: "ADD",
       color: [randomHexColor],
       emitting: true,
@@ -67,9 +43,6 @@ export class Character {
       frequency: 100,
     });
     particles.setDepth(0);
-
-    // particles.setVisible(false);
-    // this.scene.time.delayedCall(3_000, () => particles.setVisible(true));
 
     // Hud
     this.hud = new HudComponent(this, x, y - this.avatar.displayHeight);
