@@ -58,7 +58,7 @@ export class GameScene extends Phaser.Scene {
       this.charData[0],
       { color: POOL_COLORS[0] }
     );
-    const king = new Character(this, this.initialPos[1].x, this.initialPos[1].y, this.charData[1], { color: POOL_COLORS[0] });
+    const king = new Character(this, this.initialPos[1].x, this.initialPos[1].y, this.charData[1], { color: POOL_COLORS[1], particlesShapeWidthFactor: 1.25 });
     king.avatar.setOrigin(0.59, 1);
     const knight = new Character(
       this,

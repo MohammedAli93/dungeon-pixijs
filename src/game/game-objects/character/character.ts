@@ -8,6 +8,7 @@ export interface CharacterData {
 
 export interface CharacterOptions {
   color?: number;
+  particlesShapeWidthFactor?: number;
 }
 
 export class Character {
@@ -31,11 +32,12 @@ export class Character {
     this.avatar.setDepth(1);
 
     // Particles
-    const shape = new Phaser.Geom.Ellipse(0, 0, this.avatar.displayWidth / 2 / 2, this.avatar.displayHeight / 2);
+    const particlesShapeWidthFactor = options.particlesShapeWidthFactor ?? 0.5;
+    const shape = new Phaser.Geom.Ellipse(0, 0, this.avatar.displayWidth / 2 * particlesShapeWidthFactor, this.avatar.displayHeight / 2);
     const particles = this.scene.add.particles(x, y - this.avatar.displayHeight / 2, "particle", {
       lifespan: 5000,
       speed: { min: 15, max: 35 },
-      scale: { start: 0.8, end: 0 },
+      scale: { start: 0.6, end: 0 },
       blendMode: "ADD",
       color: [randomHexColor],
       emitting: true,
@@ -47,8 +49,9 @@ export class Character {
     // Hud
     this.hud = new HudComponent(this, x, y - this.avatar.displayHeight);
 
-    const shadow = this.scene.add.image(x, y, "shadow").setDepth(this.avatar.depth - 1).setOrigin(0.5, 0.5);
-    const scaleShadow = Math.min(this.avatar.displayWidth / shadow.displayWidth, this.avatar.displayHeight / shadow.displayHeight);
+    const shadow = this.scene.add.image(x, y, "shadow").setDepth(this.avatar.depth - 1).setOrigin(0.5, 0.5).setAlpha(0.6);
+    const avatarWidth = this.avatar.displayWidth * 1.25;
+    const scaleShadow = Math.min(avatarWidth / shadow.displayWidth, this.avatar.displayHeight / shadow.displayHeight);
     shadow.setScale(scaleShadow);
   }
 }
