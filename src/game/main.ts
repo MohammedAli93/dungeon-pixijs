@@ -18,8 +18,8 @@ const config: Types.Core.GameConfig = {
   // @ts-expect-error - Phaser doesn't have this property yet on the types.
   fx: {
     glow: {
-        distance: 70,
-        quality: 0.0125,
+        distance: 35,
+        quality: 0.1,
     }
   }
 };
