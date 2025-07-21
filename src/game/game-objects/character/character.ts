@@ -13,7 +13,6 @@ export class Character {
   public scene: Phaser.Scene;
   public charData: CharacterData;
   public avatar: Phaser.GameObjects.Sprite;
-  private hud: any;
   private randomHexColor: number;
 
   constructor(scene: Phaser.Scene, x: number, y: number, charData: CharacterData, options: CharacterOptions = {}) {
@@ -58,16 +57,9 @@ export class Character {
   private async loadHudComponent(x: number, y: number) {
     try {
       const module = await import("./components/hud");
-      this.hud = new module.HudComponent(this, x, y - this.avatar.displayHeight);
+      new module.HudComponent(this, x, y - this.avatar.displayHeight);
     } catch (error) {
       console.error("Failed to load HudComponent:", error);
-    }
-  }
-
-  public setGlow(enabled: boolean, strength: number = 2, distance: number = 15) {
-    this.avatar.preFX?.clear();
-    if (enabled) {
-      this.avatar.preFX?.addGlow(this.randomHexColor, strength, .1, false, distance, 32);
     }
   }
 }

@@ -10,29 +10,28 @@ export class LoadingScene extends Phaser.Scene {
     this.load.setPath("assets");
     this.load.setPrefix();
 
-    this.load.image("particle", "particle.png");
-    this.load.image("shadow", "shadow.png");
+    this.load.image("particle", "particle.webp");
+    this.load.image("shadow", "shadow.webp");
 
     // Game Scene Assets
     this.load.setPath("assets/scenes/game");
     this.load.setPrefix("scenes.game.");
 
-    this.load.image("background", "background.png");
     this.load.video("background-video", "background.mp4", true);
-    this.load.image("logo", "logo.png");
-    this.load.image("hp-bar", "hp-bar.png");
-    this.load.image("task-background", "task-background.png");
-    this.load.image("task-icon", "task-icon.png");
-    this.load.image("task-icon-checked", "task-icon-checked.png");
+    this.load.image("logo", "logo.webp");
+    this.load.image("hp-bar", "hp-bar.webp");
+    this.load.image("task-background", "task-background.webp");
+    this.load.image("task-icon", "task-icon.webp");
+    this.load.image("task-icon-checked", "task-icon-checked.webp");
 
     // Chatacter Assets
     this.load.setPath("assets/characters");
     this.load.setPrefix("characters.");
 
-    this.load.image("frogman", "character-frogman.png");
-    this.load.image("king", "character-king.png");
-    this.load.image("knight", "character-knight.png");
-    this.load.image("medusa", "character-medusa.png");
+    this.load.image("frogman", "character-frogman.webp");
+    this.load.image("king", "character-king.webp");
+    this.load.image("knight", "character-knight.webp");
+    this.load.image("medusa", "character-medusa.webp");
 
     this.load.start();
   }

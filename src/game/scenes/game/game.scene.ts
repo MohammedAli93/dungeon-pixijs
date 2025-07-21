@@ -2,18 +2,13 @@ import { EventBus } from "../../EventBus";
 import { Character } from "../../game-objects/character/character";
 import { TasksObject } from "./objects/tasks";
 
-const POOL_COLORS = [
-  0xFF876C,
-  0xF8FF6C,
-  0xBE6CFF,
-];
+const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
 
 export class GameScene extends Phaser.Scene {
-
   private fpsSamples: number[] = [];
-private assetLoadTime: number = 0;
-private errorCount: number = 0;
-private warningCount: number = 0;
+  private assetLoadTime: number = 0;
+  private errorCount: number = 0;
+  private warningCount: number = 0;
   private initialPos = [
     { x: 650, y: 1000 },
     { x: 1000, y: 950 },
@@ -35,31 +30,12 @@ private warningCount: number = 0;
   create() {
     this.assetLoadTime = performance.now();
     const { width, height } = this.scale;
-    const VIDEO_WIDTH = 3840;
-    const VIDEO_HEIGHT = 2160;
-this.debugText = this.add
-  .text(10, 10, "")
-  .setFontSize(14) // 👈 Smaller font
-  .setFontFamily("monospace") // Optional: use monospace for cleaner alignment
-  .setOrigin(0)
-  .setScrollFactor(0)
-  .setDepth(Infinity);
-    // Background
-    // const background = this.add.image(
-    //   width / 2,
-    //   height / 2,
-    //   "scenes.game.background"
-    // );
-    // background.setScale(
-    //   Math.max(width / background.width, height / background.height)
-    // );
 
     const video = this.add.video(
       width / 2,
       height / 2,
       "scenes.game.background-video"
     );
-    video.setScale(Math.max(width / VIDEO_WIDTH, height / VIDEO_HEIGHT));
     video.play(true);
 
     // Characters
@@ -70,7 +46,13 @@ this.debugText = this.add
       this.charData[0],
       { color: POOL_COLORS[0] }
     );
-    const king = new Character(this, this.initialPos[1].x, this.initialPos[1].y, this.charData[1], { color: POOL_COLORS[1], particlesShapeWidthFactor: 1.25 });
+    const king = new Character(
+      this,
+      this.initialPos[1].x,
+      this.initialPos[1].y,
+      this.charData[1],
+      { color: POOL_COLORS[1], particlesShapeWidthFactor: 1.25 }
+    );
     king.avatar.setOrigin(0.59, 1);
     const knight = new Character(
       this,
@@ -129,7 +111,8 @@ this.debugText = this.add
 
     this.debugText = this.add
       .text(10, 10, "")
-      .setFontSize(48)
+      .setFontSize(38)
+      .setFontFamily("monospace")
       .setOrigin(0)
       .setScrollFactor(0)
       .setDepth(Infinity);
@@ -137,53 +120,55 @@ this.debugText = this.add
     EventBus.emit("current-scene-ready", this);
   }
 
-update(time: number, delta: number): void {
-  const fps = this.game.loop.actualFps;
-  const frameTime = (1000 / fps);
+  update(_time: number, _delta: number): void {
+    const fps = this.game.loop.actualFps;
+    const frameTime = 1000 / fps;
 
-  // Smooth FPS samples for average
-  if (!this.fpsSamples) this.fpsSamples = [];
-  this.fpsSamples.push(fps);
-  if (this.fpsSamples.length > 60) this.fpsSamples.shift();
+    // Smooth FPS samples for average
+    if (!this.fpsSamples) this.fpsSamples = [];
+    this.fpsSamples.push(fps);
+    if (this.fpsSamples.length > 60) this.fpsSamples.shift();
 
-  const avgFps = (
-    this.fpsSamples.reduce((a, b) => a + b, 0) / this.fpsSamples.length
-  ).toFixed(1);
+    const avgFps = (
+      this.fpsSamples.reduce((a, b) => a + b, 0) / this.fpsSamples.length
+    ).toFixed(1);
 
-  const droppedFrames = this.fpsSamples.filter(f => f < 30).length;
-  const droppedPercent = ((droppedFrames / this.fpsSamples.length) * 100).toFixed(1);
+    const droppedFrames = this.fpsSamples.filter((f) => f < 30).length;
+    const droppedPercent = (
+      (droppedFrames / this.fpsSamples.length) *
+      100
+    ).toFixed(1);
 
-  const res = `${window.innerWidth}x${window.innerHeight}`;
+    const res = `${window.innerWidth}x${window.innerHeight}`;
 
-  // === RAM Info (Chrome only)
-  // const hasMemory = "memory" in performance;
-  // const usedHeap = hasMemory ? performance.memory.usedJSHeapSize / 1048576 : 0;
-  // const heapLimit = hasMemory ? performance.memory.jsHeapSizeLimit / 1048576 : 0;
-  // const ramText = hasMemory
-  //   ? `RAM: ${usedHeap.toFixed(1)}MB / ${heapLimit.toFixed(1)}MB`
-  //   : `RAM: ~450MB used`;
+    // === RAM Info (Chrome only)
+    // const hasMemory = "memory" in performance;
+    // const usedHeap = hasMemory ? performance.memory.usedJSHeapSize / 1048576 : 0;
+    // const heapLimit = hasMemory ? performance.memory.jsHeapSizeLimit / 1048576 : 0;
+    // const ramText = hasMemory
+    //   ? `RAM: ${usedHeap.toFixed(1)}MB / ${heapLimit.toFixed(1)}MB`
+    //   : `RAM: ~450MB used`;
 
-  const assetLoadTime = this.assetLoadTime
-    ? `${(this.assetLoadTime - performance.timing.navigationStart).toFixed(0)}ms`
-    : "~1200ms";
+    const assetLoadTime = this.assetLoadTime
+      ? `${(this.assetLoadTime - performance.timing.navigationStart).toFixed(
+          0
+        )}ms`
+      : "~1200ms";
 
-  const errors = this.errorCount || 0;
-  const warnings = this.warningCount || 0;
+    const errors = this.errorCount || 0;
+    const warnings = this.warningCount || 0;
 
-  const debugInfo = [
-    `[DEBUG MENU]`,
-    `FPS: ${fps.toFixed(1)} (average: ${avgFps})`,
-    `Frame Time: ${frameTime.toFixed(1)}ms`,
-   // `${ramText}`,
-    `Dropped Frames: ${droppedPercent}%`,
-    `Resolution: ${res}`,
-    `Asset Load Time: ${assetLoadTime}`,
-    `Errors: ${errors} / Warnings: ${warnings}`,
-  ].join("\n");
+    const debugInfo = [
+      `[DEBUG MENU]`,
+      `FPS: ${fps.toFixed(1)} (average: ${avgFps})`,
+      `Frame Time: ${frameTime.toFixed(1)}ms`,
+      // `${ramText}`,
+      `Dropped Frames: ${droppedPercent}%`,
+      `Resolution: ${res}`,
+      `Asset Load Time: ${assetLoadTime}`,
+      `Errors: ${errors} / Warnings: ${warnings}`,
+    ].join("\n");
 
-  this.debugText.setText(debugInfo);
-}
-
-
-
+    this.debugText.setText(debugInfo);
+  }
 }
