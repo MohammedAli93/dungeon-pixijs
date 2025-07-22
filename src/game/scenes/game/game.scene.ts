@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene {
     { key: "medusa", name: "Medusa", role: "Gorgon · Wizard" },
   ];
   debugText: Phaser.GameObjects.Text;
+  videoBG: Phaser.GameObjects.Video;
 
   constructor() {
     super("game");
@@ -30,13 +31,16 @@ export class GameScene extends Phaser.Scene {
   create() {
     this.assetLoadTime = performance.now();
     const { width, height } = this.scale;
+    // const VIDEO_WIDTH = 1067;
+    // const VIDEO_HEIGHT = 600;
 
-    const video = this.add.video(
-      width / 2,
-      height / 2,
-      "scenes.game.background-video"
-    );
-    video.play(true);
+    // this.videoBG = this.add.video(
+    //   width / 2,
+    //   height / 2,
+    //   "scenes.game.background-video"
+    // );
+    // this.videoBG.setScale(Math.max(width / VIDEO_WIDTH, height / VIDEO_HEIGHT));
+    // this.videoBG.play(true);
 
     // Characters
     new Character(
@@ -53,7 +57,7 @@ export class GameScene extends Phaser.Scene {
       this.charData[1],
       { color: POOL_COLORS[1], particlesShapeWidthFactor: 1.25 }
     );
-    king.avatar.setOrigin(0.59, 1);
+    king.setOrigin(0.59, 1);
     const knight = new Character(
       this,
       this.initialPos[2].x,
@@ -61,7 +65,7 @@ export class GameScene extends Phaser.Scene {
       this.charData[2],
       { color: POOL_COLORS[2] }
     );
-    knight.avatar.setOrigin(0.63, 1);
+    knight.setOrigin(0.63, 1);
     new Character(
       this,
       this.initialPos[3].x,
@@ -121,6 +125,20 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(_time: number, _delta: number): void {
+    const backgroundImage = document.getElementById(
+      "background-image"
+    ) as HTMLImageElement;
+    const gameContainer = document.getElementById(
+      "game-container"
+    ) as HTMLDivElement;
+    const canvasInside = gameContainer.querySelector(
+      "canvas"
+    ) as HTMLCanvasElement;
+    backgroundImage.style.width = canvasInside.style.width;
+    backgroundImage.style.height = canvasInside.style.height;
+    backgroundImage.style.marginLeft = canvasInside.style.marginLeft;
+    backgroundImage.style.marginTop = canvasInside.style.marginTop;
+
     const fps = this.game.loop.actualFps;
     const frameTime = 1000 / fps;
 
@@ -165,6 +183,7 @@ export class GameScene extends Phaser.Scene {
       // `${ramText}`,
       `Dropped Frames: ${droppedPercent}%`,
       `Resolution: ${res}`,
+      `Phaser Scale Resolution: ${this.scale.width}x${this.scale.height}`,
       `Asset Load Time: ${assetLoadTime}`,
       `Errors: ${errors} / Warnings: ${warnings}`,
     ].join("\n");

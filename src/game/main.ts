@@ -22,6 +22,7 @@ const config: Types.Core.GameConfig = {
       quality: 0.1,
     },
   },
+  transparent: true,
 };
 
 const StartGame = (parent: string) => {

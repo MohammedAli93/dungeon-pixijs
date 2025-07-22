@@ -12,42 +12,102 @@ export interface CharacterOptions {
 export class Character {
   public scene: Phaser.Scene;
   public charData: CharacterData;
-  public avatar: Phaser.GameObjects.Sprite;
+  public container: Phaser.GameObjects.Container;
   private randomHexColor: number;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, charData: CharacterData, options: CharacterOptions = {}) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    charData: CharacterData,
+    options: CharacterOptions = {}
+  ) {
     this.scene = scene;
     this.charData = charData;
 
+    // Render Texture
+    const texture = this.scene.textures.get(`characters.${charData.key}`);
+    let { width: textureWidth, height: textureHeight } = texture.source[0];
+
+    const sprite = this.scene.add.image(0, 0, texture).setOrigin(0);
+    this.randomHexColor =
+      options.color ?? Phaser.Display.Color.RandomRGB().color;
+    sprite.enableFilters();
+    sprite.filters?.internal.addGlow(
+      this.randomHexColor,
+      4,
+      0,
+      1,
+      true,
+      20,
+      35
+    );
+
+    const rt = this.scene.add.renderTexture(0, 0, textureWidth, textureHeight);
+    rt.draw(sprite);
+    rt.render();
+    rt.saveTexture(`characters.${charData.key}-glow`);
+
+    rt.destroy();
+    sprite.destroy();
+
+    this.container = this.scene.add.container(x, y);
+
+    // Glow
+    const glow = this.scene.add.image(0, 0, `characters.${charData.key}-glow`);
+
     // Avatar
-    this.avatar = this.scene.add.sprite(x, y, `characters.${charData.key}`);
-    this.avatar.setOrigin(0.5, 1);
+    const avatar = this.scene.add
+      .image(0, 0, `characters.${charData.key}`)
+      .setName("avatar");
     const maxHeight = 550;
-    const scale = Math.min(maxHeight / this.avatar.displayHeight, 1);
-    this.avatar.setScale(scale);
-    this.randomHexColor = options.color ?? Phaser.Display.Color.RandomRGB().color;
-    this.avatar.preFX?.addGlow(this.randomHexColor, 4, 0, false, 0.1, 15);
-    this.avatar.setDepth(1);
+    const scale = Math.min(maxHeight / avatar.displayHeight, 1);
+
+    this.container.add(glow);
+    this.container.add(avatar);
+    this.container.bringToTop(avatar);
+    this.container.setScale(scale);
+    this.container.setDepth(1);
+    this.setOrigin(0.5, 1);
 
     // Particles
     const particlesShapeWidthFactor = options.particlesShapeWidthFactor ?? 0.5;
-    const shape = new Phaser.Geom.Ellipse(0, 0, this.avatar.displayWidth / 2 * particlesShapeWidthFactor, this.avatar.displayHeight / 2);
-    const particles = this.scene.add.particles(x, y - this.avatar.displayHeight / 2, "particle", {
-      lifespan: 3000,
-      speed: { min: 15, max: 35 },
-      scale: { start: 0.6, end: 0 },
-      blendMode: "ADD",
-      color: [this.randomHexColor],
-      emitting: true,
-      emitZone: { type: 'edge',  source: shape, quantity: 3, total: 1 },
-      frequency: 150,
-    });
+    const displayWidth = avatar.displayWidth * scale;
+    const displayHeight = avatar.displayHeight * scale;
+    const shape = new Phaser.Geom.Ellipse(
+      0,
+      0,
+      (displayWidth / 2) * particlesShapeWidthFactor,
+      displayHeight / 2
+    );
+    const particles = this.scene.add.particles(
+      x,
+      y - displayHeight / 2,
+      "particle",
+      {
+        lifespan: 6000,
+        speed: { min: 15, max: 35 },
+        scale: { start: 0.6, end: 0 },
+        blendMode: "ADD",
+        color: [this.randomHexColor],
+        emitting: true,
+        emitZone: { type: "edge", source: shape, quantity: 5, total: 1 },
+        frequency: 150,
+      }
+    );
     particles.setDepth(0);
 
     // Shadow
-    const shadow = this.scene.add.image(x, y, "shadow").setDepth(this.avatar.depth - 1).setOrigin(0.5, 0.7).setAlpha(0.7);
-    const avatarWidth = this.avatar.displayWidth * 1.6;
-    const scaleShadow = Math.min(avatarWidth / shadow.displayWidth, this.avatar.displayHeight / shadow.displayHeight);
+    const shadow = this.scene.add
+      .image(x, y, "shadow")
+      .setDepth(avatar.depth - 1)
+      .setOrigin(0.5, 0.7)
+      .setAlpha(0.7);
+    const avatarWidth = displayWidth * 1.6;
+    const scaleShadow = Math.min(
+      avatarWidth / shadow.displayWidth,
+      avatar.displayHeight / shadow.displayHeight
+    );
     shadow.setScale(scaleShadow);
 
     // Dynamic HUD import
@@ -56,10 +116,23 @@ export class Character {
 
   private async loadHudComponent(x: number, y: number) {
     try {
+      const avatar = this.container.getByName(
+        "avatar"
+      ) as Phaser.GameObjects.Image;
       const module = await import("./components/hud");
-      new module.HudComponent(this, x, y - this.avatar.displayHeight);
+      new module.HudComponent(
+        this,
+        x,
+        y - avatar.displayHeight * this.container.scale
+      );
     } catch (error) {
       console.error("Failed to load HudComponent:", error);
     }
+  }
+
+  public setOrigin(x: number, y: number) {
+    (this.container.getAll() as Phaser.GameObjects.Image[]).forEach((child) => {
+      child.setOrigin(x, y);
+    });
   }
 }

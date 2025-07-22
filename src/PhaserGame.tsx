@@ -53,6 +53,21 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
       };
     }, [currentActiveScene, ref]);
 
-    return <div id="game-container"></div>;
+    return (
+      <div id="game-container" style={{ position: "relative" }}>
+        <img
+          id="background-image"
+          src="/assets/scenes/game/background.gif"
+          alt="gif"
+          width="1920px"
+          height="1080px"
+          style={{
+            position: "absolute",
+            zIndex: -1,
+            // pointerEvents: "none",
+          }}
+        />
+      </div>
+    );
   }
 );

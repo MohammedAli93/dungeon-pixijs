@@ -17,7 +17,7 @@ export class LoadingScene extends Phaser.Scene {
     this.load.setPath("assets/scenes/game");
     this.load.setPrefix("scenes.game.");
 
-    this.load.video("background-video", "background.mp4", true);
+    // this.load.video("background-video", "background3.webm", true);
     this.load.image("logo", "logo.webp");
     this.load.image("hp-bar", "hp-bar.webp");
     this.load.image("task-background", "task-background.webp");
