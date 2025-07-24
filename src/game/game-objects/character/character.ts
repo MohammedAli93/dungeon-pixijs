@@ -26,27 +26,27 @@ export class Character {
     this.charData = charData;
 
     // Render Texture
-    const texture = this.scene.textures.get(`characters.${charData.key}`);
+    const texture = this.scene.textures.get(charData.key);
     let { width: textureWidth, height: textureHeight } = texture.source[0];
 
-    const sprite = this.scene.add.image(0, 0, texture).setOrigin(0);
+    const sprite = this.scene.add.image(0 + textureWidth / 4, 0 + textureHeight / 4, texture).setOrigin(0);
     this.randomHexColor =
       options.color ?? Phaser.Display.Color.RandomRGB().color;
     sprite.enableFilters();
     sprite.filters?.internal.addGlow(
       this.randomHexColor,
-      4,
+      1.2,
       0,
       1,
       true,
-      20,
-      35
-    );
+      30,
+      100
+    ).setPaddingOverride(null);
 
-    const rt = this.scene.add.renderTexture(0, 0, textureWidth, textureHeight);
+    const rt = this.scene.add.renderTexture(0, 0, textureWidth * 1.5, textureHeight * 1.5);
     rt.draw(sprite);
     rt.render();
-    rt.saveTexture(`characters.${charData.key}-glow`);
+    rt.saveTexture(`${charData.key}-glow`);
 
     rt.destroy();
     sprite.destroy();
@@ -54,11 +54,11 @@ export class Character {
     this.container = this.scene.add.container(x, y);
 
     // Glow
-    const glow = this.scene.add.image(0, 0, `characters.${charData.key}-glow`);
+    const glow = this.scene.add.image(0, 0, `${charData.key}-glow`);
 
     // Avatar
     const avatar = this.scene.add
-      .image(0, 0, `characters.${charData.key}`)
+      .image(0, 0, charData.key)
       .setName("avatar");
     const maxHeight = 550;
     const scale = Math.min(maxHeight / avatar.displayHeight, 1);
@@ -85,9 +85,9 @@ export class Character {
       y - displayHeight / 2,
       "particle",
       {
-        lifespan: 6000,
+        lifespan: 4_500,
         speed: { min: 15, max: 35 },
-        scale: { start: 0.6, end: 0 },
+        scale: { start: 0.3, end: 0 },
         blendMode: "ADD",
         color: [this.randomHexColor],
         emitting: true,
@@ -131,8 +131,14 @@ export class Character {
   }
 
   public setOrigin(x: number, y: number) {
+    const avatar = this.container.getByName(
+      "avatar"
+    ) as Phaser.GameObjects.Image;
     (this.container.getAll() as Phaser.GameObjects.Image[]).forEach((child) => {
-      child.setOrigin(x, y);
+      child.setPosition(
+        avatar.displayWidth * (0.5 - x),
+        avatar.displayHeight * (0.5 - y)
+      );
     });
   }
 }

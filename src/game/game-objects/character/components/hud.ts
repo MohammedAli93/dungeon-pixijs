@@ -16,7 +16,7 @@ export class HudComponent {
     this.container.setDepth(1);
 
     // Name
-    this.nameText = scene.add.text(0, 0, charData.name).setFontSize(24).setOrigin(0.5, 1).setFontStyle("bold").setFontFamily("Magra-Regular");
+    this.nameText = scene.add.text(0, 0, charData.name).setFontSize(20).setOrigin(0.5, 1).setFontStyle("bold").setFontFamily("Magra-Regular");
     this.container.add(this.nameText);
 
     // Role

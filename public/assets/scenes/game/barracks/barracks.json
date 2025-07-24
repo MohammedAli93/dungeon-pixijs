@@ -1,0 +1,97 @@
+{
+  "background-video": "/assets/scenes/game/barracks/background.mp4",
+  "enable-mic": true,
+  "titles": [
+    {
+      "text": [
+        "Ah, Barron, your wit serves you well! In this moment of clarity, you discern a hidden pathway",
+        "behind a tapestry, leading deeper into the priory's mystery. What will you do now?"
+      ]
+    },
+    {
+      "text": [
+        "The air grows thick with anticipation as you step forward, the faint scent of old parchment and candle wax guiding your senses.",
+        "Shadows flicker along the stone walls, whispering secrets of the priory's forgotten past."
+      ]
+    },
+    {
+      "text": [
+        "A distant bell tolls, echoing through the ancient halls. Somewhere beyond, a secret waits to be uncovered—its truth entwined with the fate of all who wander here."
+      ]
+    },
+    {
+      "text": [
+        "The path ahead is long and winding, but you are determined to find the exit. What will you do?"
+      ]
+    },
+    {
+      "text": [
+        "You step forward, the faint scent of old parchment and candle wax guiding your senses.",
+        "Shadows flicker along the stone walls, whispering secrets of the priory's forgotten past."
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "key": "characters.barracks.knight",
+      "name": "The Knight",
+      "role": "cursed · warrior",
+      "position": {
+        "x": 1350,
+        "y": 925
+      },
+      "origin": {
+        "x": 0.58,
+        "y": 1
+      }
+    },
+    {
+      "key": "characters.barracks.medusa",
+      "name": "Hocus Pocus",
+      "role": "cursed · warrior",
+      "position": {
+        "x": 1150,
+        "y": 1000
+      }
+    },
+    {
+      "key": "characters.barracks.king",
+      "name": "Uncommon Lonnggg Long Name",
+      "role": "cursed · warrior",
+      "position": {
+        "x": 1550,
+        "y": 1025
+      },
+      "origin": {
+        "x": 0.47,
+        "y": 1
+      }
+    }
+  ],
+  "zone-buttons": [
+    {
+      "key": "scenes.game.barracks.zone-button-barracks",
+      "blocked": true,
+      "position": {
+        "x": 300,
+        "y": 950
+      }
+    },
+    {
+      "key": "scenes.game.barracks.zone-button-altar",
+      "blocked": true,
+      "position": {
+        "x": 400,
+        "y": 950
+      }
+    },
+    {
+      "key": "scenes.game.barracks.zone-button-mushroom-forest",
+      "blocked": true,
+      "position": {
+        "x": 350,
+        "y": 1000
+      }
+    }
+  ]
+}

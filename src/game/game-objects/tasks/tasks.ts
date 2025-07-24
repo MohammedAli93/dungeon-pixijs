@@ -7,7 +7,7 @@ export class TasksObject {
     this.scene = scene;
 
     this.container = this.scene.add.container(x, y);
-    this.container.setDepth(1);
+    this.container.setDepth(3);
 
     // Status
     this.statusText = this.scene.add.text(10, 10, "Completed").setFontSize(20).setOrigin(0).setFontFamily("Magra-Regular");
