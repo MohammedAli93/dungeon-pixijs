@@ -1,5 +1,8 @@
-import { GameScene } from "./scenes/game/game.scene";
 import { AUTO, Game, Types } from "phaser";
+import RexUIPlugin from "../lib/rex-plugins/templates/ui/ui-plugin";
+
+// Scenes
+import { GameScene } from "./scenes/game/game.scene";
 import { LoadingScene } from "./scenes/loading/loading.scene";
 
 // Find out more information about the Game Config at:
@@ -15,14 +18,16 @@ const config: Types.Core.GameConfig = {
   parent: "game-container",
   backgroundColor: "#028af8",
   scene: [LoadingScene, GameScene],
-  // @ts-expect-error - Phaser doesn't have this property yet on the types.
-  fx: {
-    glow: {
-      distance: 35,
-      quality: 0.1,
-    },
-  },
   transparent: true,
+  plugins: {
+    scene: [
+      {
+        key: "rexUI",
+        plugin: RexUIPlugin,
+        mapping: "rexUI",
+      },
+    ],
+  },
 };
 
 const StartGame = (parent: string) => {
