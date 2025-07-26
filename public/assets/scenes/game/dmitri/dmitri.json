@@ -1,0 +1,102 @@
+{
+  "background-video": "/assets/scenes/game/dmitri/background.mp4",
+  "enable-mic": true,
+  "title": {
+    "texts": [
+      {
+        "text": ["Welcome! I'm Sir Bart Stageforth, your friendly Game Master."]
+      },
+      {
+        "text": [
+          "Who has come forth to answer Jade's call? Ah...yes... I see we have brave adventurers indeed..."
+        ]
+      },
+      {
+        "text": [
+          "Goku, a Saiyan, adorned with Saiyan warrior clothing, wielding staff that can lengthen."
+        ]
+      },
+      {
+        "text": ["Prepare yourselves now as we begin our tale!"]
+      },
+      {
+        "text": [
+          "Seven years have passed since you last saw Jade. Now, with the harvest moon rising, you make your way to Timberfall. As sunset bathes the town's wooden walls in golden light, your path is blocked by a checkpoint manned by stern-faced guards. Your eyes dart to the posters plastered on the gates: \"Wanted: Jade Dawnweaver — Traitor to the Verdant Crown\". A burly captain steps forward, hand resting easy on his sword hilt…"
+        ]
+      },
+      {
+        "text": [
+          "\"Halt there, travelers! I am Captain Dmitri. By Queen Melantha Thornveil's orders, we must question every soul passing through. What business do you have in Timberfall?\""
+        ]
+      },
+      {
+        "text": [
+          "Now, brave adventurers, how shall you proceed? Will you use your charm to sway Captain Dmitri with honeyed words, rely on your wit to slip past unseen like shadows in the night, or perhaps trust your brawn to demonstrate your might? Which of your attributes will you put to the test?"
+        ]
+      }
+    ]
+  },
+  "characters": [
+    {
+      "key": "characters.dmitri.knight",
+      "name": "The Knight",
+      "role": "cursed · warrior",
+      "position": {
+        "x": 1350,
+        "y": 925
+      },
+      "origin": {
+        "x": 0.58,
+        "y": 1
+      }
+    },
+    {
+      "key": "characters.dmitri.medusa",
+      "name": "Hocus Pocus",
+      "role": "cursed · warrior",
+      "position": {
+        "x": 1150,
+        "y": 1000
+      }
+    },
+    {
+      "key": "characters.dmitri.king",
+      "name": "Uncommon Lonnggg Long Name",
+      "role": "cursed · warrior",
+      "position": {
+        "x": 1550,
+        "y": 1025
+      },
+      "origin": {
+        "x": 0.47,
+        "y": 1
+      }
+    }
+  ],
+  "zone-buttons": [
+    {
+      "key": "scenes.game.dmitri.zone-button-dmitri",
+      "blocked": true,
+      "position": {
+        "x": 300,
+        "y": 950
+      }
+    },
+    {
+      "key": "scenes.game.dmitri.zone-button-altar",
+      "blocked": true,
+      "position": {
+        "x": 400,
+        "y": 950
+      }
+    },
+    {
+      "key": "scenes.game.dmitri.zone-button-mushroom-forest",
+      "blocked": true,
+      "position": {
+        "x": 350,
+        "y": 1000
+      }
+    }
+  ]
+}

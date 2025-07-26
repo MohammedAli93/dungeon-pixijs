@@ -2,6 +2,7 @@ import { EventBus } from "../../EventBus";
 import { Character } from "../../game-objects/character/character";
 import { TasksObject } from "../../game-objects/tasks/tasks";
 import { TitleGameObject } from "../../game-objects/title/title";
+import { TopBarGameObject } from "../../game-objects/top-bar/top-bar";
 import { ZoneButton } from "../../game-objects/zone-button/zone-button";
 import { parseGameData } from "../../utils/game-data-parser";
 
@@ -55,12 +56,12 @@ export class GameScene extends Phaser.Scene {
     });
 
     // Title
-    const title = new TitleGameObject(this, data.titles);
+    const title = new TitleGameObject(this, data.title.texts);
     this.time.addEvent({
       delay: 5_000,
       repeat: -1,
       callback: () => {
-        title.next();
+        title.next(true);
       },
     });
 
@@ -101,12 +102,15 @@ export class GameScene extends Phaser.Scene {
     );
     tasksObject.checkIfAllTasksCompleted();
 
+    new TopBarGameObject(this);
+
     this.debugText = this.add
       .text(10, 10, "")
       .setFontSize(38)
       .setFontFamily("monospace")
       .setOrigin(0)
       .setScrollFactor(0)
+      .setVisible(false)
       .setDepth(Infinity);
 
     EventBus.emit("current-scene-ready", this);

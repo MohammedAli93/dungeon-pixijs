@@ -25,7 +25,18 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image("zone-button-blocked", "zone-button-blocked.webp");
     this.load.image("mic", "mic.webp");
     this.load.image("mic-background", "mic-background.webp");
+    this.load.image("top-bar-avatar-01", "top-bar-avatar-01.webp");
+    this.load.image("top-bar-avatar-02", "top-bar-avatar-02.webp");
+    this.load.image("top-bar-avatar-03", "top-bar-avatar-03.webp");
+    this.load.image("top-bar-background", "top-bar-background.webp");
+    this.load.image("top-bar-button-chat-history", "top-bar-button-chat-history.webp");
+    this.load.image("top-bar-button-menu", "top-bar-button-menu.webp");
+    this.load.image("top-bar-tooltips-audio", "top-bar-tooltips-audio.webp");
+    this.load.image("top-bar-tooltips-background", "top-bar-tooltips-background.webp");
+    this.load.image("top-bar-tooltips-mic", "top-bar-tooltips-mic.webp");
+    this.load.image("top-bar-tooltips-video", "top-bar-tooltips-video.webp");
 
+    // Mushroom Forest
     this.load.setPrefix("scenes.game.mushroom-forest.");
     this.load.image(
       "zone-button-mushroom-forest",
@@ -33,17 +44,19 @@ export class LoadingScene extends Phaser.Scene {
     );
     this.load.json("data", "mushroom-forest/mushroom-forest.json");
 
-    this.load.setPrefix("scenes.game.barracks.");
-    this.load.image("zone-button-altar", "barracks/zone-button-altar.webp");
+    // Dmitri
+    this.load.setPrefix("scenes.game.dmitri.");
+    this.load.image("zone-button-altar", "dmitri/zone-button-altar.webp");
     this.load.image(
-      "zone-button-barracks",
-      "barracks/zone-button-barracks.webp"
+      "zone-button-dmitri",
+      "dmitri/zone-button-dmitri.webp"
     );
     this.load.image(
       "zone-button-mushroom-forest",
-      "barracks/zone-button-mushroom-forest.webp"
+      "dmitri/zone-button-mushroom-forest.webp"
     );
-    this.load.json("data", "barracks/barracks.json");
+    this.load.audio("dialogue", "dmitri/dialogue.m4a");
+    this.load.json("data", "dmitri/dmitri.json");
 
     // Chatacter Assets
     this.load.setPath("assets/characters");
@@ -54,8 +67,8 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image("knight", "character-knight.webp");
     this.load.image("medusa", "character-medusa.webp");
 
-    this.load.setPath("assets/scenes/game/barracks");
-    this.load.setPrefix("characters.barracks.");
+    this.load.setPath("assets/scenes/game/dmitri");
+    this.load.setPrefix("characters.dmitri.");
     this.load.image("king", "king.webp");
     this.load.image("knight", "knight.webp");
     this.load.image("medusa", "medusa.webp");
@@ -65,10 +78,10 @@ export class LoadingScene extends Phaser.Scene {
 
   create() {
     this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-      this.scene.start("game", { dataKey: "scenes.game.mushroom-forest.data" });
-      setTimeout(() => {
-        this.scene.start("game", { dataKey: "scenes.game.barracks.data" });
-      }, 5000);
+      this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
+      // setTimeout(() => {
+      //   this.scene.start("game", { dataKey: "scenes.game.mushroom-forest.data" });
+      // }, 5000);
     });
     EventBus.emit("current-scene-ready", this);
     this.startLoadingAssets();

@@ -7,10 +7,10 @@ const HEIGHT_PERCENTAGE = 0.2;
 export class TitleGameObject {
   private scene: Phaser.Scene;
   private headers: Phaser.GameObjects.Text[] = [];
-  private data: TitleData[];
+  private data: TitleData["texts"];
   private currentIndex: number = 0;
 
-  constructor(scene: Phaser.Scene, titles: TitleData[]) {
+  constructor(scene: Phaser.Scene, titles: TitleData["texts"]) {
     this.scene = scene;
     this.data = titles;
     const { width, height } = this.scene.scale;
@@ -44,13 +44,16 @@ export class TitleGameObject {
     this.headers[1] = tmp;
   }
 
-  public async next() {
+  public async next(stopIfLast: boolean = false) {
     await Promise.all([this.dissapearHeader(), this.moveNextHeader()]);
     this.swapHeaders();
     this.nextHeader.getData("blur").strength = BLUR_STRENGTH;
     this.currentIndex = (this.currentIndex + 1) % this.data.length;
     const nextIndex = (this.currentIndex + 1) % this.data.length;
     this.nextHeader.setText(this.data[nextIndex].text.join(" "));
+    if (stopIfLast && this.currentIndex === this.data.length - 1) {
+      return;
+    }
     await this.appearNextHeader();
   }
 

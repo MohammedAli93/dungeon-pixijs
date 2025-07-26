@@ -1,13 +1,13 @@
 export interface GameData {
   backgroundVideo: string;
   enableMic: boolean;
-  titles: TitleData[];
+  title: TitleData;
   characters: CharacterData[];
   zoneButtons: ZoneButtonData[];
 }
 
 export interface TitleData {
-  text: string[];
+  texts: { text: string[] }[];
 }
 
 export interface CharacterData {
@@ -37,7 +37,7 @@ export function parseGameData(data: any) {
   const parsedData = {
     backgroundVideo: data["background-video"],
     enableMic: data["enable-mic"],
-    titles: data.titles,
+    title: data.title,
     characters: data.characters,
     zoneButtons: data["zone-buttons"],
   } as GameData;

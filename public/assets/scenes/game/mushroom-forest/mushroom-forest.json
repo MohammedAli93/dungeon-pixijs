@@ -1,36 +1,38 @@
 {
   "background-video": "/assets/scenes/game/background2.mp4",
   "enable-mic": false,
-  "titles": [
-    {
-      "text": [
-        "Ah, Barron, your wit serves you well! In this moment of clarity, you discern a hidden pathway",
-        "behind a tapestry, leading deeper into the priory's mystery. What will you do now?"
-      ]
-    },
-    {
-      "text": [
-        "The air grows thick with anticipation as you step forward, the faint scent of old parchment and candle wax guiding your senses.",
-        "Shadows flicker along the stone walls, whispering secrets of the priory's forgotten past."
-      ]
-    },
-    {
-      "text": [
-        "A distant bell tolls, echoing through the ancient halls. Somewhere beyond, a secret waits to be uncovered—its truth entwined with the fate of all who wander here."
-      ]
-    },
-    {
-      "text": [
-        "The path ahead is long and winding, but you are determined to find the exit. What will you do?"
-      ]
-    },
-    {
-      "text": [
-        "You step forward, the faint scent of old parchment and candle wax guiding your senses.",
-        "Shadows flicker along the stone walls, whispering secrets of the priory's forgotten past."
-      ]
-    }
-  ],
+  "title": {
+    "texts": [
+      {
+        "text": [
+          "Ah, Barron, your wit serves you well! In this moment of clarity, you discern a hidden pathway",
+          "behind a tapestry, leading deeper into the priory's mystery. What will you do now?"
+        ]
+      },
+      {
+        "text": [
+          "The air grows thick with anticipation as you step forward, the faint scent of old parchment and candle wax guiding your senses.",
+          "Shadows flicker along the stone walls, whispering secrets of the priory's forgotten past."
+        ]
+      },
+      {
+        "text": [
+          "A distant bell tolls, echoing through the ancient halls. Somewhere beyond, a secret waits to be uncovered—its truth entwined with the fate of all who wander here."
+        ]
+      },
+      {
+        "text": [
+          "The path ahead is long and winding, but you are determined to find the exit. What will you do?"
+        ]
+      },
+      {
+        "text": [
+          "You step forward, the faint scent of old parchment and candle wax guiding your senses.",
+          "Shadows flicker along the stone walls, whispering secrets of the priory's forgotten past."
+        ]
+      }
+    ]
+  },
   "characters": [
     {
       "key": "characters.mushroom-forest.frogman",
