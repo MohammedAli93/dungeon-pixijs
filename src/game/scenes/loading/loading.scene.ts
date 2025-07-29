@@ -33,7 +33,6 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image("task-icon", "task-icon.webp");
     this.load.image("task-icon-checked", "task-icon-checked.webp");
     this.load.image("zone-button-blocked", "zone-button-blocked.webp");
-    this.load.image("mic-background", "mic-background.webp"); // TODO: Remove
     this.load.image("top-bar-avatar-01", "top-bar-avatar-01.webp");
     this.load.image("top-bar-avatar-02", "top-bar-avatar-02.webp");
     this.load.image("top-bar-avatar-03", "top-bar-avatar-03.webp");
@@ -46,14 +45,7 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image("top-bar-tooltips-video", "top-bar-tooltips-video.webp");
     this.load.image("hold-to-talk", "hold-to-talk.webp");
     this.load.image("text-to-game-master-background", "text-to-game-master-background.webp");
-
-    // Mushroom Forest
-    this.load.setPrefix("scenes.game.mushroom-forest.");
-    this.load.image(
-      "zone-button-mushroom-forest",
-      "mushroom-forest/zone-button-mushroom-forest.webp"
-    );
-    this.load.json("data", "mushroom-forest/mushroom-forest.json");
+    this.load.image("bottom-background", "bottom-background.webp");
 
     // Dmitri
     this.load.setPrefix("scenes.game.dmitri.");

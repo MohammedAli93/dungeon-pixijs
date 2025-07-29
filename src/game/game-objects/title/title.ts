@@ -19,18 +19,18 @@ export class TitleGameObject {
     this.headers.push(this.createHeader(width * WORD_WRAP_WIDTH_PERCENTAGE));
 
     const y = (height * HEIGHT_PERCENTAGE) / 2;
-    this.header.setText(titles[0].text.join(" ")).setPosition(width / 2, y);
+    this.header.setText(titles[0].text.join(" ")).setPosition(width / 2, y).setAlpha(0);
     this.oldHeader
       .setText(titles[1].text.join(" "))
       .setPosition(width / 2, 0)
       .setAlpha(0);
 
-    for (const header of this.headers) {
-      header.enableFilters();
-      const strength = header === this.header ? 0 : BLUR_STRENGTH;
-      const blur = header.filters?.internal.addBlur(0, 2, 2, strength);
-      header.setData("blur", blur);
-    }
+    // for (const header of this.headers) {
+    //   header.enableFilters();
+    //   const strength = header === this.header ? 0 : BLUR_STRENGTH;
+    //   const blur = header.filters?.internal.addBlur(0, 2, 2, strength);
+    //   header.setData("blur", blur);
+    // }
   }
 
   private get header() {
@@ -77,7 +77,7 @@ export class TitleGameObject {
   }
 
   private async appearHeader() {
-    const blur = this.header.getData("blur") as Phaser.Filters.Blur;
+    // const blur = this.header.getData("blur") as Phaser.Filters.Blur;
     const y = (this.scene.scale.height * HEIGHT_PERCENTAGE) / 2;
     this.header.setY(y + this.header.displayHeight / 2);
     return Promise.all([
@@ -92,21 +92,21 @@ export class TitleGameObject {
           },
         });
       }),
-      new Promise((resolve) => {
-        this.scene.tweens.add({
-          targets: blur,
-          duration: 500,
-          onComplete: resolve,
-          props: {
-            strength: 0,
-          },
-        });
-      }),
+      // new Promise((resolve) => {
+      //   this.scene.tweens.add({
+      //     targets: blur,
+      //     duration: 500,
+      //     onComplete: resolve,
+      //     props: {
+      //       strength: 0,
+      //     },
+      //   });
+      // }),
     ]);
   }
 
   private async moveHeaderToOldHeader() {
-    const blur = this.header.getData("blur") as Phaser.Filters.Blur;
+    // const blur = this.header.getData("blur") as Phaser.Filters.Blur;
     const y = 0;
     return Promise.all([
       new Promise((resolve) => {
@@ -116,20 +116,20 @@ export class TitleGameObject {
           onComplete: resolve,
           props: {
             y,
-            alpha: 1,
+            alpha: 0.5,
           },
         });
       }),
-      new Promise((resolve) => {
-        this.scene.tweens.add({
-          targets: blur,
-          duration: 500,
-          onComplete: resolve,
-          props: {
-            strength: BLUR_STRENGTH,
-          },
-        });
-      }),
+      // new Promise((resolve) => {
+      //   this.scene.tweens.add({
+      //     targets: blur,
+      //     duration: 500,
+      //     onComplete: resolve,
+      //     props: {
+      //       strength: BLUR_STRENGTH,
+      //     },
+      //   });
+      // }),
     ]);
   }
 
@@ -146,6 +146,7 @@ export class TitleGameObject {
   }
 
   public async runAndStopAtEnd() {
+    await this.appearHeader();
     for (let i = 0; i < this.data.length; i++) {
       if (i > 0) await this.next(true);
       const textData = this.data[i];

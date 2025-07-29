@@ -61,11 +61,12 @@ export class GameScene extends Phaser.Scene {
 
     // Title
     const title = new TitleGameObject(this, data.title.texts);
-    title.runAndStopAtEnd();
+    // title.runAndStopAtEnd();
 
     if (data.enableMic) {
       this.add
-        .image(width / 2, height, "scenes.game.mic-background")
+        .image(width / 2, height + 100, "scenes.game.bottom-background")
+        .setScale(1.1)
         .setOrigin(0.5, 1)
         .setDepth(2);
       const mic = this.add
@@ -115,9 +116,19 @@ export class GameScene extends Phaser.Scene {
     new TopBarGameObject(this);
 
     if (data.audioAtStart) {
+      // this.time.delayedCall(200, () => {
+      //   const sound = this.sound.add("scenes.game.dmitri.dialogue");
+      //   sound.play();
+      // });
+      // const sound = this.sound.add("scenes.game.dmitri.dialogue");
+      // sound.play();
+    }
+
+    this.input.once(Phaser.Input.Events.POINTER_DOWN, () => {
       const sound = this.sound.add("scenes.game.dmitri.dialogue");
       sound.play();
-    }
+      title.runAndStopAtEnd();
+    });
 
     this.debugText = this.add
       .text(10, 10, "")
@@ -188,6 +199,7 @@ export class GameScene extends Phaser.Scene {
       `Phaser Scale Resolution: ${this.scale.width}x${this.scale.height}`,
       `Asset Load Time: ${assetLoadTime}`,
       `Errors: ${errors} / Warnings: ${warnings}`,
+      `Game Objects: ${this.children.length}`
     ].join("\n");
 
     this.debugText.setText(debugInfo);

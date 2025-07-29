@@ -1,6 +1,6 @@
 export function setBackgroundVideo(videoUrl: string) {
   const video = document.getElementById("game-video") as HTMLVideoElement;
-  video.setAttribute("src", videoUrl);
+  // video.setAttribute("src", videoUrl);
 }
 
 export function updateBackgroundContainer(canvas: HTMLCanvasElement) {
