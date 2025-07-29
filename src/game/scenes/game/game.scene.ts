@@ -1,10 +1,12 @@
-import { EventBus } from "../../EventBus";
+import * as PIXI from "pixi.js";
+// import { EventBus } from "../../EventBus";
+import { SceneBase } from "../../core/scene-manager";
 import { Character } from "../../game-objects/character/character";
 import { TasksObject } from "./objects/tasks";
 
 const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
 
-export class GameScene extends Phaser.Scene {
+export class GameScene extends SceneBase {
   private fpsSamples: number[] = [];
   private assetLoadTime: number = 0;
   private errorCount: number = 0;
@@ -21,26 +23,21 @@ export class GameScene extends Phaser.Scene {
     { key: "knight", name: "Knight", role: "Swordman · Holy" },
     { key: "medusa", name: "Medusa", role: "Gorgon · Wizard" },
   ];
-  debugText: Phaser.GameObjects.Text;
-  videoBG: Phaser.GameObjects.Video;
+  debugText: PIXI.Text;
+  videoBG: PIXI.Sprite;
 
-  constructor() {
-    super("game");
-  }
-
-  create() {
+  async onCreate() {
     this.assetLoadTime = performance.now();
-    const { width, height } = this.scale;
+    const { width, height } = this.app.screen;
     // const VIDEO_WIDTH = 1067;
     // const VIDEO_HEIGHT = 600;
 
-    // this.videoBG = this.add.video(
-    //   width / 2,
-    //   height / 2,
-    //   "scenes.game.background-video"
-    // );
+    this.videoBG = new PIXI.Sprite(PIXI.Assets.get("scenes.game.background-video"));
+    this.videoBG.position.set(width / 2, height / 2);
+    this.videoBG.anchor.set(0.5);
     // this.videoBG.setScale(Math.max(width / VIDEO_WIDTH, height / VIDEO_HEIGHT));
     // this.videoBG.play(true);
+    this.container.addChild(this.videoBG);
 
     // Characters
     new Character(
@@ -75,90 +72,104 @@ export class GameScene extends Phaser.Scene {
     );
 
     // Header
-    const header = this.add
-      .text(width / 2, 100, "")
-      .setFontSize(20)
-      .setOrigin(0.5, 0)
-      .setFontStyle("bold")
-      .setFontFamily("Magra-Regular")
-      .setScrollFactor(0)
-      .setDepth(Infinity);
-    header.setText([
-      "Ah, Barron, your wit serves you well! In this moment of clarity, you discern a hidden pathway",
-      "behind a tapestry, leading deeper into the priory's mystery. What will you do now?",
-    ]);
+    console.log(width / 2);
+    // @ts-ignore
+    const header = new PIXI.Text({
+      x: width / 2,
+      y: 100,
+      text: [
+        "Ah, Barron, your wit serves you well! In this moment of clarity, you discern a hidden pathway",
+        "behind a tapestry, leading deeper into the priory's mystery. What will you do now?",
+      ].join("\n"),
+      style: {
+        fontSize: 20,
+        fontFamily: "Magra-Regular",
+        fill: 0xffffff,
+        fontStyle: "bold",
+      },
+      anchor: {
+        x: 0.5,
+        y: 0,
+      },
+    });
+    this.container.addChild(header);
 
-    // Logo
-    const logo = this.add
-      .image(width / 5, height - 200, "scenes.game.logo")
-      .setInteractive({ useHandCursor: true })
-      .on(Phaser.Input.Events.POINTER_OVER, () =>
-        this.tweens.add({ targets: logo, scale: 1.1, duration: 100 })
-      )
-      .on(Phaser.Input.Events.POINTER_OUT, () =>
-        this.tweens.add({ targets: logo, scale: 1, duration: 100 })
-      );
+    const logo = new PIXI.Sprite(PIXI.Assets.get("scenes.game.logo"));
+    logo.position.set(width / 5, height - 200);
+    logo.anchor.set(0.5);
+    logo.interactive = true;
+    logo.on("pointerover", () => logo.scale.set(1.1));
+    logo.on("pointerout", () => logo.scale.set(1));
+    logo.cursor = "pointer";
+    this.container.addChild(logo);
+    // // Logo
+    // const logo = this.add
+    //   .image(width / 5, height - 200, "scenes.game.logo")
+    //   .setInteractive({ useHandCursor: true })
+    //   .on(Phaser.Input.Events.POINTER_OVER, () =>
+    //     this.tweens.add({ targets: logo, scale: 1.1, duration: 100 })
+    //   )
+    //   .on(Phaser.Input.Events.POINTER_OUT, () =>
+    //     this.tweens.add({ targets: logo, scale: 1, duration: 100 })
+    //   );
 
-    // Tasks
-    const tasksObject = new TasksObject(this, width - 350, height - 150);
-    tasksObject.addTask(
-      "tavern",
-      "Interrogate townsfolk in the tavern for where Mira was last seen",
-      false
-    );
-    tasksObject.addTask(
-      "altar",
-      "Get through the field of mushrooms to reach the Sprite Altar",
-      true
-    );
-    tasksObject.checkIfAllTasksCompleted();
+    // // Tasks
+    // const tasksObject = new TasksObject(this, width - 350, height - 150);
+    // tasksObject.addTask(
+    //   "tavern",
+    //   "Interrogate townsfolk in the tavern for where Mira was last seen",
+    //   false
+    // );
+    // tasksObject.addTask(
+    //   "altar",
+    //   "Get through the field of mushrooms to reach the Sprite Altar",
+    //   true
+    // );
+    // tasksObject.checkIfAllTasksCompleted();
 
-    this.debugText = this.add
-      .text(10, 10, "")
-      .setFontSize(38)
-      .setFontFamily("monospace")
-      .setOrigin(0)
-      .setScrollFactor(0)
-      .setDepth(Infinity);
+    this.debugText = new PIXI.Text({
+      x: 10,
+      y: 10,
+      style: {
+        fontSize: 38,
+        fontFamily: "monospace",
+        fill: 0xffffff,
+      },
+    });
+    this.container.addChild(this.debugText);
 
-    EventBus.emit("current-scene-ready", this);
+    // EventBus.emit("current-scene-ready", this);
   }
 
-  update(_time: number, _delta: number): void {
-    const backgroundImage = document.getElementById(
-      "background-image"
-    ) as HTMLImageElement;
-    const gameContainer = document.getElementById(
-      "game-container"
-    ) as HTMLDivElement;
-    const canvasInside = gameContainer.querySelector(
-      "canvas"
-    ) as HTMLCanvasElement;
-    backgroundImage.style.width = canvasInside.style.width;
-    backgroundImage.style.height = canvasInside.style.height;
-    backgroundImage.style.marginLeft = canvasInside.style.marginLeft;
-    backgroundImage.style.marginTop = canvasInside.style.marginTop;
-
-    const fps = this.game.loop.actualFps;
+  onUpdate(ticker: PIXI.Ticker): void {
+    // const backgroundImage = document.getElementById(
+    //   "background-image"
+    // ) as HTMLImageElement;
+    // const gameContainer = document.getElementById(
+    //   "game-container"
+    // ) as HTMLDivElement;
+    // const canvasInside = gameContainer.querySelector(
+    //   "canvas"
+    // ) as HTMLCanvasElement;
+    // backgroundImage.style.width = canvasInside.style.width;
+    // backgroundImage.style.height = canvasInside.style.height;
+    // backgroundImage.style.marginLeft = canvasInside.style.marginLeft;
+    // backgroundImage.style.marginTop = canvasInside.style.marginTop;
+    const fps = ticker.FPS;
     const frameTime = 1000 / fps;
-
     // Smooth FPS samples for average
     if (!this.fpsSamples) this.fpsSamples = [];
     this.fpsSamples.push(fps);
     if (this.fpsSamples.length > 60) this.fpsSamples.shift();
-
     const avgFps = (
       this.fpsSamples.reduce((a, b) => a + b, 0) / this.fpsSamples.length
     ).toFixed(1);
-
     const droppedFrames = this.fpsSamples.filter((f) => f < 30).length;
     const droppedPercent = (
       (droppedFrames / this.fpsSamples.length) *
       100
     ).toFixed(1);
-
     const res = `${window.innerWidth}x${window.innerHeight}`;
-
     // === RAM Info (Chrome only)
     // const hasMemory = "memory" in performance;
     // const usedHeap = hasMemory ? performance.memory.usedJSHeapSize / 1048576 : 0;
@@ -166,16 +177,14 @@ export class GameScene extends Phaser.Scene {
     // const ramText = hasMemory
     //   ? `RAM: ${usedHeap.toFixed(1)}MB / ${heapLimit.toFixed(1)}MB`
     //   : `RAM: ~450MB used`;
-
     const assetLoadTime = this.assetLoadTime
       ? `${(this.assetLoadTime - performance.timing.navigationStart).toFixed(
           0
         )}ms`
       : "~1200ms";
-
     const errors = this.errorCount || 0;
     const warnings = this.warningCount || 0;
-
+    
     const debugInfo = [
       `[DEBUG MENU]`,
       `FPS: ${fps.toFixed(1)} (average: ${avgFps})`,
@@ -183,11 +192,10 @@ export class GameScene extends Phaser.Scene {
       // `${ramText}`,
       `Dropped Frames: ${droppedPercent}%`,
       `Resolution: ${res}`,
-      `Phaser Scale Resolution: ${this.scale.width}x${this.scale.height}`,
+      `PIXI Screen Resolution: ${this.app.screen.width}x${this.app.screen.height}`,
       `Asset Load Time: ${assetLoadTime}`,
       `Errors: ${errors} / Warnings: ${warnings}`,
     ].join("\n");
-
-    this.debugText.setText(debugInfo);
+    this.debugText.text = debugInfo;
   }
 }

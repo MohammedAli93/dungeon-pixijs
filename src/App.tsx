@@ -1,14 +1,14 @@
 import { useRef } from "react";
-import { IRefPhaserGame, PhaserGame } from "./PhaserGame";
+import { IRefPixiGame, PixiGame } from "./PixiGame";
 
 function App() {
-  //  References to the PhaserGame component (game and scene are exposed)
-  const phaserRef = useRef<IRefPhaserGame | null>(null);
-  // const scene = phaserRef.current.scene;
+  //  References to the PixiGame component (game and scene are exposed)
+  const pixiRef = useRef<IRefPixiGame | null>(null);
+  // const scene = pixiRef.current.scene;
 
   return (
-    <div id="app">
-      <PhaserGame ref={phaserRef} />
+    <div id="app" style={{ backgroundColor: "pink"}}>
+      <PixiGame ref={pixiRef} />
     </div>
   );
 }

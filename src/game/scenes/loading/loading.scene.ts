@@ -1,46 +1,44 @@
-import { EventBus } from "../../EventBus";
+import * as PIXI from "pixi.js";
+import { SceneBase } from "../../core/scene-manager";
+// import { EventBus } from "../../EventBus";
 
-export class LoadingScene extends Phaser.Scene {
-  constructor() {
-    super("loading");
-  }
-
-  startLoadingAssets() {
+export class LoadingScene extends SceneBase {
+  async startLoadingAssets() {
     // Global Assets
-    this.load.setPath("assets");
-    this.load.setPrefix();
+    this.setLoadPath("assets");
+    this.setLoadPrefix();
 
-    this.load.image("particle", "particle.webp");
-    this.load.image("shadow", "shadow.webp");
+    await this.loadAsset("particle", "particle.webp");
+    await this.loadAsset("shadow", "shadow.webp");
 
     // Game Scene Assets
-    this.load.setPath("assets/scenes/game");
-    this.load.setPrefix("scenes.game.");
+    this.setLoadPath("assets/scenes/game");
+    this.setLoadPrefix("scenes.game.");
 
-    // this.load.video("background-video", "background3.webm", true);
-    this.load.image("logo", "logo.webp");
-    this.load.image("hp-bar", "hp-bar.webp");
-    this.load.image("task-background", "task-background.webp");
-    this.load.image("task-icon", "task-icon.webp");
-    this.load.image("task-icon-checked", "task-icon-checked.webp");
+    await this.loadAsset("background-video", "background3.webm");
+    await this.loadAsset("logo", "logo.webp");
+    await this.loadAsset("hp-bar", "hp-bar.webp");
+    await this.loadAsset("task-background", "task-background.webp");
+    await this.loadAsset("task-icon", "task-icon.webp");
+    await this.loadAsset("task-icon-checked", "task-icon-checked.webp");
 
     // Chatacter Assets
-    this.load.setPath("assets/characters");
-    this.load.setPrefix("characters.");
+    this.setLoadPath("assets/characters");
+    this.setLoadPrefix("characters.");
 
-    this.load.image("frogman", "character-frogman.webp");
-    this.load.image("king", "character-king.webp");
-    this.load.image("knight", "character-knight.webp");
-    this.load.image("medusa", "character-medusa.webp");
-
-    this.load.start();
+    await this.loadAsset("frogman", "character-frogman.webp");
+    await this.loadAsset("king", "character-king.webp");
+    await this.loadAsset("knight", "character-knight.webp");
+    await this.loadAsset("medusa", "character-medusa.webp");
   }
 
-  create() {
-    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-      this.scene.start("game");
-    });
-    EventBus.emit("current-scene-ready", this);
-    this.startLoadingAssets();
+  async onCreate() {
+    // this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+    //   this.scene.start("game");
+    // });
+    // EventBus.emit("current-scene-ready", this);
+    await this.startLoadingAssets();
+    console.log("Loading assets", PIXI.Assets.get("particle"), PIXI.Assets.get("scenes.game.logo"));
+    this.manager.gotoScene("game");
   }
 }
