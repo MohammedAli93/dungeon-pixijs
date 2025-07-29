@@ -1,38 +1,46 @@
 {
   "background-video": "/assets/scenes/game/dmitri/background.mp4",
   "enable-mic": true,
+  "audio-at-start": "scenes.game.dmitri.dialogue",
   "title": {
     "texts": [
       {
-        "text": ["Welcome! I'm Sir Bart Stageforth, your friendly Game Master."]
+        "text": ["Welcome! I'm Sir Bart Stageforth, your friendly Game Master."],
+        "duration": 5000
       },
       {
         "text": [
           "Who has come forth to answer Jade's call? Ah...yes... I see we have brave adventurers indeed..."
-        ]
+        ],
+        "duration": 7500
       },
       {
         "text": [
           "Goku, a Saiyan, adorned with Saiyan warrior clothing, wielding staff that can lengthen."
-        ]
+        ],
+        "duration": 5500
       },
       {
-        "text": ["Prepare yourselves now as we begin our tale!"]
+        "text": ["Prepare yourselves now as we begin our tale!"],
+        "duration": 2500
       },
       {
         "text": [
           "Seven years have passed since you last saw Jade. Now, with the harvest moon rising, you make your way to Timberfall. As sunset bathes the town's wooden walls in golden light, your path is blocked by a checkpoint manned by stern-faced guards. Your eyes dart to the posters plastered on the gates: \"Wanted: Jade Dawnweaver — Traitor to the Verdant Crown\". A burly captain steps forward, hand resting easy on his sword hilt…"
-        ]
+        ],
+        "duration": 28000
       },
       {
         "text": [
           "\"Halt there, travelers! I am Captain Dmitri. By Queen Melantha Thornveil's orders, we must question every soul passing through. What business do you have in Timberfall?\""
-        ]
+        ],
+        "duration": 11000
       },
       {
         "text": [
           "Now, brave adventurers, how shall you proceed? Will you use your charm to sway Captain Dmitri with honeyed words, rely on your wit to slip past unseen like shadows in the night, or perhaps trust your brawn to demonstrate your might? Which of your attributes will you put to the test?"
-        ]
+        ],
+        "duration": 17500
       }
     ]
   },

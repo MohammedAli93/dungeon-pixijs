@@ -1,9 +1,13 @@
-import { EventBus } from "../../EventBus";
+import {
+  setBackgroundVideo,
+  updateBackgroundContainer,
+} from "../../../dom/background-container";
 import { Character } from "../../game-objects/character/character";
 import { TasksObject } from "../../game-objects/tasks/tasks";
 import { TitleGameObject } from "../../game-objects/title/title";
 import { TopBarGameObject } from "../../game-objects/top-bar/top-bar";
 import { ZoneButton } from "../../game-objects/zone-button/zone-button";
+import { generateButton } from "../../utils/button";
 import { parseGameData } from "../../utils/game-data-parser";
 
 const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
@@ -39,7 +43,7 @@ export class GameScene extends Phaser.Scene {
     // );
     // this.videoBG.setScale(Math.max(width / VIDEO_WIDTH, height / VIDEO_HEIGHT));
     // this.videoBG.play(true);
-    EventBus.emit("change-video", data.backgroundVideo);
+    setBackgroundVideo(data.backgroundVideo);
 
     // Characters
     data.characters.forEach((characterData, index) => {
@@ -57,28 +61,34 @@ export class GameScene extends Phaser.Scene {
 
     // Title
     const title = new TitleGameObject(this, data.title.texts);
-    this.time.addEvent({
-      delay: 5_000,
-      repeat: -1,
-      callback: () => {
-        title.next(true);
-      },
-    });
+    title.runAndStopAtEnd();
 
     if (data.enableMic) {
-      this.add.image(width / 2, height, "scenes.game.mic-background").setOrigin(0.5, 1).setDepth(2);
-      const mic = this.add.image(width / 2 + 4, height - 141, "scenes.game.mic").setDepth(2);
-      mic.setInteractive({ useHandCursor: true })
-        .on(Phaser.Input.Events.POINTER_OVER, () => {
-          this.tweens.add({ targets: mic, scale: 1.1, duration: 100 });
-        })
-        .on(Phaser.Input.Events.POINTER_OUT, () => {
-          this.tweens.add({ targets: mic, scale: 1, duration: 100 });
-        });
+      this.add
+        .image(width / 2, height, "scenes.game.mic-background")
+        .setOrigin(0.5, 1)
+        .setDepth(2);
+      const mic = this.add
+        .image(width / 2 + 4, height - 141, "scenes.game.hold-to-talk")
+        .setDepth(2);
+      generateButton(mic);
+      const textToGameMaster = this.add
+        .image(width / 2 + 4, 0, "scenes.game.text-to-game-master-background")
+        .setDepth(2);
+      textToGameMaster.setY(
+        mic.y + mic.displayHeight / 2 + textToGameMaster.displayHeight / 2 + 20
+      );
+      this.add
+        .text(textToGameMaster.x, textToGameMaster.y, "Text to Game Master")
+        .setOrigin(0.5)
+        .setFontSize(16)
+        .setFontFamily("Magra-Regular")
+        .setColor("#FFFFFF99")
+        .setDepth(2);
     }
 
     // Zone Buttons
-    data.zoneButtons.forEach((zoneButtonData, index) => {
+    data.zoneButtons.forEach((zoneButtonData) => {
       new ZoneButton(
         this,
         zoneButtonData.position.x,
@@ -104,32 +114,32 @@ export class GameScene extends Phaser.Scene {
 
     new TopBarGameObject(this);
 
+    if (data.audioAtStart) {
+      const sound = this.sound.add("scenes.game.dmitri.dialogue");
+      sound.play();
+    }
+
     this.debugText = this.add
       .text(10, 10, "")
       .setFontSize(38)
       .setFontFamily("monospace")
       .setOrigin(0)
       .setScrollFactor(0)
-      .setVisible(false)
       .setDepth(Infinity);
 
-    EventBus.emit("current-scene-ready", this);
+    this.input.keyboard?.on(Phaser.Input.Keyboard.Events.KEY_DOWN + "D", () => {
+      this.debugText.setVisible(!this.debugText.visible);
+    });
   }
 
   update(_time: number, _delta: number): void {
-    const backgroundContainer = document.getElementById(
-      "background-container"
-    ) as HTMLImageElement;
-    const gameContainer = document.getElementById(
-      "game-container"
-    ) as HTMLDivElement;
+    const gameContainer = document.getElementById("app") as HTMLDivElement;
     const canvasInside = gameContainer.querySelector(
       "canvas"
     ) as HTMLCanvasElement;
-    backgroundContainer.style.width = canvasInside.style.width;
-    backgroundContainer.style.height = canvasInside.style.height;
-    backgroundContainer.style.marginLeft = canvasInside.style.marginLeft;
-    backgroundContainer.style.marginTop = canvasInside.style.marginTop;
+    this.events.on(Phaser.Scenes.Events.UPDATE, () => {
+      updateBackgroundContainer(canvasInside);
+    });
 
     const fps = this.game.loop.actualFps;
     const frameTime = 1000 / fps;
@@ -169,7 +179,7 @@ export class GameScene extends Phaser.Scene {
     const warnings = this.warningCount || 0;
 
     const debugInfo = [
-      `[DEBUG MENU]`,
+      `[DEBUG MENU] - Press [D] to toggle`,
       `FPS: ${fps.toFixed(1)} (average: ${avgFps})`,
       `Frame Time: ${frameTime.toFixed(1)}ms`,
       // `${ramText}`,

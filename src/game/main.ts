@@ -15,7 +15,7 @@ const config: Types.Core.GameConfig = {
     width: 1920,
     height: 1080,
   },
-  parent: "game-container",
+  parent: "app",
   backgroundColor: "#028af8",
   scene: [LoadingScene, GameScene],
   transparent: true,
@@ -33,5 +33,7 @@ const config: Types.Core.GameConfig = {
 const StartGame = (parent: string) => {
   return new Game({ ...config, parent });
 };
+
+StartGame("app");
 
 export default StartGame;

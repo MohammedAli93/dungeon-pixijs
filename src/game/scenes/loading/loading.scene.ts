@@ -1,8 +1,18 @@
-import { EventBus } from "../../EventBus";
-
 export class LoadingScene extends Phaser.Scene {
+  private fullLoaded = {
+    once: false,
+    loadingAds: false,
+    assetsLoaded: false,
+  };
+
   constructor() {
     super("loading");
+  }
+
+  preload() {
+    this.load.setPath("assets/scenes/loading");
+    this.load.setPrefix("scenes.loading.");
+    this.load.image("volley-logo", "volley-logo.png");
   }
 
   startLoadingAssets() {
@@ -23,8 +33,7 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image("task-icon", "task-icon.webp");
     this.load.image("task-icon-checked", "task-icon-checked.webp");
     this.load.image("zone-button-blocked", "zone-button-blocked.webp");
-    this.load.image("mic", "mic.webp");
-    this.load.image("mic-background", "mic-background.webp");
+    this.load.image("mic-background", "mic-background.webp"); // TODO: Remove
     this.load.image("top-bar-avatar-01", "top-bar-avatar-01.webp");
     this.load.image("top-bar-avatar-02", "top-bar-avatar-02.webp");
     this.load.image("top-bar-avatar-03", "top-bar-avatar-03.webp");
@@ -35,6 +44,8 @@ export class LoadingScene extends Phaser.Scene {
     this.load.image("top-bar-tooltips-background", "top-bar-tooltips-background.webp");
     this.load.image("top-bar-tooltips-mic", "top-bar-tooltips-mic.webp");
     this.load.image("top-bar-tooltips-video", "top-bar-tooltips-video.webp");
+    this.load.image("hold-to-talk", "hold-to-talk.webp");
+    this.load.image("text-to-game-master-background", "text-to-game-master-background.webp");
 
     // Mushroom Forest
     this.load.setPrefix("scenes.game.mushroom-forest.");
@@ -77,13 +88,55 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   create() {
-    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-      this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
-      // setTimeout(() => {
-      //   this.scene.start("game", { dataKey: "scenes.game.mushroom-forest.data" });
-      // }, 5000);
+    const { width, height } = this.scale;
+
+    const volleyLogo = this.add
+      .image(width / 2, height / 2, "scenes.loading.volley-logo")
+      .setAlpha(0);
+
+    this.tweens.add({
+      targets: volleyLogo,
+      delay: 500,
+      props: {
+        alpha: { from: 0, to: 1 },
+      },
+      onComplete: () => {
+        this.tweens.add({
+          targets: volleyLogo,
+          delay: 500,
+          props: {
+            alpha: { from: 1, to: 0 },
+          },
+          onComplete: () => {
+            this.fullLoaded.loadingAds = true;
+          },
+        });
+      },
     });
-    EventBus.emit("current-scene-ready", this);
+
+    this.load.once(Phaser.Loader.Events.COMPLETE, () => {
+      this.fullLoaded.assetsLoaded = true;
+      // Dev purpose.
+      if (import.meta.env.DEV) {
+        this.fullLoaded.loadingAds = true;
+        this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
+        // setTimeout(() => {
+        //   this.scene.start("game", { dataKey: "scenes.game.mushroom-forest.data" });
+        // }, 5000);
+      }
+    });
+
     this.startLoadingAssets();
+  }
+
+  update() {
+    if (
+      !this.fullLoaded.once &&
+      this.fullLoaded.loadingAds &&
+      this.fullLoaded.assetsLoaded
+    ) {
+      this.fullLoaded.once = true;
+      this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
+    }
   }
 }
