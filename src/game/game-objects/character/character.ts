@@ -30,7 +30,7 @@ export class Character {
     this.charData = charData;
 
     // Render Texture
-    // const texture = this.scene.textures.get(`characters.${charData.key}`);
+    // const texture = this.scene.textures.get(charData.key);
     // let { width: textureWidth, height: textureHeight } = texture.source[0];
 
     // const sprite = this.scene.add.image(0, 0, texture).setOrigin(0);
@@ -62,15 +62,15 @@ export class Character {
     // const glow = this.scene.add.image(0, 0, `characters.${charData.key}-glow`);
 
     // Avatar
-    const avatar = new PIXI.Sprite(PIXI.Assets.get(`characters.${charData.key}`));
+    const avatar = new PIXI.Sprite(PIXI.Assets.get(charData.key));
     avatar.anchor.set(0.5, 1);
     // const avatar = this.scene.add
-    //   .image(0, 0, `characters.${charData.key}`)
+    //   .image(0, 0, charData.key)
     //   .setName("avatar");
     const maxHeight = 550;
     const scale = Math.min(maxHeight / avatar.width, 1);
 
-    avatar.filters = [new GlowFilter({color: 0x00ff00, distance: 10, outerStrength: 4, innerStrength: 1, quality: 0.1, knockout: false, alpha: true})];
+    // avatar.filters = [new GlowFilter({color: 0x00ff00, distance: 10, outerStrength: 4, innerStrength: 1, quality: 0.1, knockout: false, alpha: true})];
 
     // avatar.filters = [GlowFilter]
     

@@ -1,3 +1,9 @@
+import { gsap } from "gsap";
+import { PixiPlugin } from "gsap/PixiPlugin";
+import * as PIXI from "pixi.js";
+
+gsap.registerPlugin(PixiPlugin);
+PixiPlugin.registerPIXI(PIXI);
 import { SceneManager } from "./core/scene-manager";
 import { GameScene } from "./scenes/game/game.scene";
 import { LoadingScene } from "./scenes/loading/loading.scene";
@@ -15,5 +21,7 @@ const StartGame = (parent: string) => {
   });
   return manager;
 };
+
+StartGame("app");
 
 export default StartGame;

@@ -31,7 +31,7 @@ export class SceneBase {
     });
   }
 
-  async onCreate() {}
+  async onCreate(data?: unknown) {}
 
   onUpdate(delta: PIXI.Ticker) {}
 
@@ -67,9 +67,10 @@ export class SceneManager {
       .init({
         // resizeTo: window, // Auto fill the screen
         autoDensity: true, // Handles high DPI screens
-        backgroundColor: 0x028af8,
+        // backgroundColor: 0x028af8,
         width,
         height,
+        backgroundAlpha: 0,
       })
       .then(async () => {
         this.loaded = true;
@@ -88,7 +89,11 @@ export class SceneManager {
         window.addEventListener("resize", () => this.resize());
         this.resize();
 
-        await PIXI.Assets.init();
+        await PIXI.Assets.init({
+          texturePreference: {
+            format: ["webp", "png"],
+          }
+        });
 
         Object.entries(scenes).forEach(([key, scene]) => {
           this.addScene(key, scene);
@@ -122,7 +127,7 @@ export class SceneManager {
   }
 
   // Replace the current scene with the new one
-  async gotoScene(key: string) {
+  async gotoScene(key: string, data?: unknown) {
     const newScene = this.scenes.get(key);
     if (!newScene) throw new Error(`Scene '${key}' not found`);
     if (this.currentScene !== undefined) {
@@ -143,7 +148,7 @@ export class SceneManager {
     this.currentScene = newScene;
     this.app.stage.addChild(container);
     this.currentScene.container = container;
-    await newScene.onCreate();
+    await newScene.onCreate(data);
   }
 
   addScene(key: string, scene: typeof SceneBase) {

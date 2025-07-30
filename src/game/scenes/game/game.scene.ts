@@ -1,131 +1,137 @@
 import * as PIXI from "pixi.js";
-// import { EventBus } from "../../EventBus";
+import {
+  setBackgroundVideo,
+  updateBackgroundContainer,
+} from "../../../dom/background-container";
 import { SceneBase } from "../../core/scene-manager";
 import { Character } from "../../game-objects/character/character";
-import { TasksObject } from "./objects/tasks";
+import { TasksObject } from "../../game-objects/tasks/tasks";
+import { TitleGameObject } from "../../game-objects/title/title";
+import { TopBarGameObject } from "../../game-objects/top-bar/top-bar";
+import { ZoneButton } from "../../game-objects/zone-button/zone-button";
+import { generateButton } from "../../utils/button";
+import { parseGameData } from "../../utils/game-data-parser";
+import { Howl } from "howler";
 
 const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
+
+interface GameSceneData {
+  dataKey: string;
+}
 
 export class GameScene extends SceneBase {
   private fpsSamples: number[] = [];
   private assetLoadTime: number = 0;
   private errorCount: number = 0;
   private warningCount: number = 0;
-  private initialPos = [
-    { x: 650, y: 1000 },
-    { x: 1000, y: 950 },
-    { x: 1400, y: 1000 },
-    { x: 1700, y: 875 },
-  ];
-  private charData = [
-    { key: "frogman", name: "Frogman", role: "Rogue · Poisoner" },
-    { key: "king", name: "King", role: "Leader · Warrior" },
-    { key: "knight", name: "Knight", role: "Swordman · Holy" },
-    { key: "medusa", name: "Medusa", role: "Gorgon · Wizard" },
-  ];
   debugText: PIXI.Text;
-  videoBG: PIXI.Sprite;
+  private canvasInside?: HTMLCanvasElement;
 
-  async onCreate() {
+  async onCreate({ dataKey }: GameSceneData) {
     this.assetLoadTime = performance.now();
     const { width, height } = this.app.screen;
-    // const VIDEO_WIDTH = 1067;
-    // const VIDEO_HEIGHT = 600;
+    const data = parseGameData(PIXI.Assets.get((dataKey)));
 
-    this.videoBG = new PIXI.Sprite(PIXI.Assets.get("scenes.game.background-video"));
-    this.videoBG.position.set(width / 2, height / 2);
-    this.videoBG.anchor.set(0.5);
-    // this.videoBG.setScale(Math.max(width / VIDEO_WIDTH, height / VIDEO_HEIGHT));
-    // this.videoBG.play(true);
-    this.container.addChild(this.videoBG);
+    // Background video setup (disabled)
+    setBackgroundVideo(data.backgroundVideo);
+
+    // Cache canvas for DOM sync
+    const gameContainer = document.getElementById("app") as HTMLDivElement;
+    this.canvasInside = gameContainer?.querySelector("canvas") ?? undefined;
 
     // Characters
-    new Character(
-      this,
-      this.initialPos[0].x,
-      this.initialPos[0].y,
-      this.charData[0],
-      { color: POOL_COLORS[0] }
-    );
-    const king = new Character(
-      this,
-      this.initialPos[1].x,
-      this.initialPos[1].y,
-      this.charData[1],
-      { color: POOL_COLORS[1], particlesShapeWidthFactor: 1.25 }
-    );
-    king.setOrigin(0.59, 1);
-    const knight = new Character(
-      this,
-      this.initialPos[2].x,
-      this.initialPos[2].y,
-      this.charData[2],
-      { color: POOL_COLORS[2] }
-    );
-    knight.setOrigin(0.63, 1);
-    new Character(
-      this,
-      this.initialPos[3].x,
-      this.initialPos[3].y,
-      this.charData[3],
-      { color: POOL_COLORS[0] }
-    );
-
-    // Header
-    console.log(width / 2);
-    // @ts-ignore
-    const header = new PIXI.Text({
-      x: width / 2,
-      y: 100,
-      text: [
-        "Ah, Barron, your wit serves you well! In this moment of clarity, you discern a hidden pathway",
-        "behind a tapestry, leading deeper into the priory's mystery. What will you do now?",
-      ].join("\n"),
-      style: {
-        fontSize: 20,
-        fontFamily: "Magra-Regular",
-        fill: 0xffffff,
-        fontStyle: "bold",
-      },
-      anchor: {
-        x: 0.5,
-        y: 0,
-      },
+    data.characters.forEach((characterData, index) => {
+      const character = new Character(
+        this,
+        characterData.position.x,
+        characterData.position.y,
+        characterData,
+        { color: POOL_COLORS[index % POOL_COLORS.length] }
+      );
+      if (characterData.origin) {
+        character.setOrigin(characterData.origin.x, characterData.origin.y);
+      }
     });
-    this.container.addChild(header);
 
-    const logo = new PIXI.Sprite(PIXI.Assets.get("scenes.game.logo"));
-    logo.position.set(width / 5, height - 200);
-    logo.anchor.set(0.5);
-    logo.interactive = true;
-    logo.on("pointerover", () => logo.scale.set(1.1));
-    logo.on("pointerout", () => logo.scale.set(1));
-    logo.cursor = "pointer";
-    this.container.addChild(logo);
-    // // Logo
-    // const logo = this.add
-    //   .image(width / 5, height - 200, "scenes.game.logo")
-    //   .setInteractive({ useHandCursor: true })
-    //   .on(Phaser.Input.Events.POINTER_OVER, () =>
-    //     this.tweens.add({ targets: logo, scale: 1.1, duration: 100 })
-    //   )
-    //   .on(Phaser.Input.Events.POINTER_OUT, () =>
-    //     this.tweens.add({ targets: logo, scale: 1, duration: 100 })
-    //   );
+    // Title
+    const title = new TitleGameObject(this, data.title.texts);
 
-    // // Tasks
-    // const tasksObject = new TasksObject(this, width - 350, height - 150);
-    // tasksObject.addTask(
-    //   "tavern",
-    //   "Interrogate townsfolk in the tavern for where Mira was last seen",
-    //   false
-    // );
-    // tasksObject.addTask(
-    //   "altar",
-    //   "Get through the field of mushrooms to reach the Sprite Altar",
-    //   true
-    // );
-    // tasksObject.checkIfAllTasksCompleted();
+    if (data.enableMic) {
+      const bottomBackground = PIXI.Sprite.from("scenes.game.bottom-background");
+      bottomBackground.position.set(width / 2, height + 100);
+      bottomBackground.anchor.set(0.5, 1);
+      bottomBackground.scale.set(1.1);
+      bottomBackground.zIndex = 2;
+      this.container.addChild(bottomBackground);
+      const mic = new PIXI.Sprite(PIXI.Assets.get("scenes.game.hold-to-talk"));
+      mic.position.set(width / 2 + 4, height - 141);
+      mic.anchor.set(0.5);
+      mic.zIndex = 2;
+      generateButton(mic);
+      this.container.addChild(mic);
+      const textToGameMasterBackground = new PIXI.Sprite(PIXI.Assets.get("scenes.game.text-to-game-master-background"));
+      textToGameMasterBackground.position.set(width / 2 + 4, mic.y + mic.height / 2 + textToGameMasterBackground.height / 2 + 20);
+      textToGameMasterBackground.anchor.set(0.5);
+      textToGameMasterBackground.zIndex = 2;
+      this.container.addChild(textToGameMasterBackground);
+      // @ts-ignore PixiJS typings are wrong with 'fontStyle'.
+      const textToGameMaster = new PIXI.Text({
+        x: textToGameMasterBackground.x,
+        y: textToGameMasterBackground.y,
+        text: "Text to Game Master",
+        style: {
+          fontSize: 16,
+          fontFamily: "Magra-Regular",
+          fill: 0xffffff,
+          fontStyle: "bold",
+        },
+        anchor: {
+          x: 0.5,
+          y: 0.5,
+        },
+      });
+      textToGameMaster.zIndex = 2;
+      this.container.addChild(textToGameMaster);
+    }
+
+    // Zone Buttons
+    data.zoneButtons.forEach((zoneButtonData) => {
+      new ZoneButton(
+        this,
+        zoneButtonData.position.x,
+        zoneButtonData.position.y,
+        zoneButtonData.key,
+        zoneButtonData.blocked
+      );
+    });
+
+    // Tasks
+    const tasksObject = new TasksObject(this, width - 350, height - 150);
+    tasksObject.addTask(
+      "tavern",
+      "Interrogate townsfolk in the tavern for where Mira was last seen",
+      false
+    );
+    tasksObject.addTask(
+      "altar",
+      "Get through the field of mushrooms to reach the Sprite Altar",
+      true
+    );
+    tasksObject.checkIfAllTasksCompleted();
+
+    new TopBarGameObject(this);
+
+    this.app.stage.eventMode = 'static';
+    this.app.stage.hitArea = this.app.screen;
+    const onMouseDown = () => {
+      const sound = new Howl({
+        src: ["assets/scenes/game/dmitri/dialogue.m4a"],
+      })
+      sound.play();
+      title.runAndStopAtEnd();
+      this.app.stage.off("mousedown", onMouseDown);
+    }
+    this.app.stage.on('mousedown', onMouseDown);
 
     this.debugText = new PIXI.Text({
       x: 10,
@@ -136,25 +142,20 @@ export class GameScene extends SceneBase {
         fill: 0xffffff,
       },
     });
+    this.debugText.visible = import.meta.env.DEV;
     this.container.addChild(this.debugText);
 
-    // EventBus.emit("current-scene-ready", this);
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "d") {
+        this.debugText.visible = !this.debugText.visible;
+      }
+    });
   }
 
   onUpdate(ticker: PIXI.Ticker): void {
-    // const backgroundImage = document.getElementById(
-    //   "background-image"
-    // ) as HTMLImageElement;
-    // const gameContainer = document.getElementById(
-    //   "game-container"
-    // ) as HTMLDivElement;
-    // const canvasInside = gameContainer.querySelector(
-    //   "canvas"
-    // ) as HTMLCanvasElement;
-    // backgroundImage.style.width = canvasInside.style.width;
-    // backgroundImage.style.height = canvasInside.style.height;
-    // backgroundImage.style.marginLeft = canvasInside.style.marginLeft;
-    // backgroundImage.style.marginTop = canvasInside.style.marginTop;
+    if (this.canvasInside) {
+      updateBackgroundContainer(this.canvasInside);
+    }
     const fps = ticker.FPS;
     const frameTime = 1000 / fps;
     // Smooth FPS samples for average
@@ -186,7 +187,7 @@ export class GameScene extends SceneBase {
     const warnings = this.warningCount || 0;
     
     const debugInfo = [
-      `[DEBUG MENU]`,
+      `[DEBUG MENU] - Press [D] to toggle`,
       `FPS: ${fps.toFixed(1)} (average: ${avgFps})`,
       `Frame Time: ${frameTime.toFixed(1)}ms`,
       // `${ramText}`,
