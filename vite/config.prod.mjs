@@ -7,7 +7,7 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    phaser: ['phaser']
+                    ["pixi.js"]: ["pixi.js"]
                 }
             }
         },
