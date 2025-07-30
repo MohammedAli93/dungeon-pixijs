@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
   private errorCount: number = 0;
   private warningCount: number = 0;
   debugText: Phaser.GameObjects.Text;
-  // videoBG: Phaser.GameObjects.Video;
+  private canvasInside?: HTMLCanvasElement;
 
   constructor() {
     super("game");
@@ -33,17 +33,13 @@ export class GameScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const data = parseGameData(this.cache.json.get(dataKey));
     console.log(data);
-    // const VIDEO_WIDTH = 1067;
-    // const VIDEO_HEIGHT = 600;
 
-    // this.videoBG = this.add.video(
-    //   width / 2,
-    //   height / 2,
-    //   "scenes.game.background-video"
-    // );
-    // this.videoBG.setScale(Math.max(width / VIDEO_WIDTH, height / VIDEO_HEIGHT));
-    // this.videoBG.play(true);
+    // Background video setup (disabled)
     setBackgroundVideo(data.backgroundVideo);
+
+    // Cache canvas for DOM sync
+    const gameContainer = document.getElementById("app") as HTMLDivElement;
+    this.canvasInside = gameContainer?.querySelector("canvas") ?? undefined;
 
     // Characters
     data.characters.forEach((characterData, index) => {
@@ -61,7 +57,6 @@ export class GameScene extends Phaser.Scene {
 
     // Title
     const title = new TitleGameObject(this, data.title.texts);
-    // title.runAndStopAtEnd();
 
     if (data.enableMic) {
       this.add
@@ -115,15 +110,6 @@ export class GameScene extends Phaser.Scene {
 
     new TopBarGameObject(this);
 
-    if (data.audioAtStart) {
-      // this.time.delayedCall(200, () => {
-      //   const sound = this.sound.add("scenes.game.dmitri.dialogue");
-      //   sound.play();
-      // });
-      // const sound = this.sound.add("scenes.game.dmitri.dialogue");
-      // sound.play();
-    }
-
     this.input.once(Phaser.Input.Events.POINTER_DOWN, () => {
       const sound = this.sound.add("scenes.game.dmitri.dialogue");
       sound.play();
@@ -144,19 +130,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   update(_time: number, _delta: number): void {
-    const gameContainer = document.getElementById("app") as HTMLDivElement;
-    const canvasInside = gameContainer.querySelector(
-      "canvas"
-    ) as HTMLCanvasElement;
-    this.events.on(Phaser.Scenes.Events.UPDATE, () => {
-      updateBackgroundContainer(canvasInside);
-    });
+    if (this.canvasInside) {
+      updateBackgroundContainer(this.canvasInside);
+    }
 
     const fps = this.game.loop.actualFps;
     const frameTime = 1000 / fps;
 
-    // Smooth FPS samples for average
-    if (!this.fpsSamples) this.fpsSamples = [];
     this.fpsSamples.push(fps);
     if (this.fpsSamples.length > 60) this.fpsSamples.shift();
 
@@ -171,15 +151,6 @@ export class GameScene extends Phaser.Scene {
     ).toFixed(1);
 
     const res = `${window.innerWidth}x${window.innerHeight}`;
-
-    // === RAM Info (Chrome only)
-    // const hasMemory = "memory" in performance;
-    // const usedHeap = hasMemory ? performance.memory.usedJSHeapSize / 1048576 : 0;
-    // const heapLimit = hasMemory ? performance.memory.jsHeapSizeLimit / 1048576 : 0;
-    // const ramText = hasMemory
-    //   ? `RAM: ${usedHeap.toFixed(1)}MB / ${heapLimit.toFixed(1)}MB`
-    //   : `RAM: ~450MB used`;
-
     const assetLoadTime = this.assetLoadTime
       ? `${(this.assetLoadTime - performance.timing.navigationStart).toFixed(
           0
@@ -193,13 +164,12 @@ export class GameScene extends Phaser.Scene {
       `[DEBUG MENU] - Press [D] to toggle`,
       `FPS: ${fps.toFixed(1)} (average: ${avgFps})`,
       `Frame Time: ${frameTime.toFixed(1)}ms`,
-      // `${ramText}`,
       `Dropped Frames: ${droppedPercent}%`,
       `Resolution: ${res}`,
       `Phaser Scale Resolution: ${this.scale.width}x${this.scale.height}`,
       `Asset Load Time: ${assetLoadTime}`,
       `Errors: ${errors} / Warnings: ${warnings}`,
-      `Game Objects: ${this.children.length}`
+      `Game Objects: ${this.children.length}`,
     ].join("\n");
 
     this.debugText.setText(debugInfo);

@@ -12,7 +12,6 @@ export class LoadingScene extends Phaser.Scene {
   preload() {
     this.load.setPath("assets/scenes/loading");
     this.load.setPrefix("scenes.loading.");
-    this.load.image("volley-logo", "volley-logo.png");
   }
 
   startLoadingAssets() {
@@ -80,31 +79,31 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = this.scale;
+    // const { width, height } = this.scale;
 
-    const volleyLogo = this.add
-      .image(width / 2, height / 2, "scenes.loading.volley-logo")
-      .setAlpha(0);
+    // const volleyLogo = this.add
+    //   .image(width / 2, height / 2, "scenes.loading.volley-logo")
+    //   .setAlpha(0);
 
-    this.tweens.add({
-      targets: volleyLogo,
-      delay: 500,
-      props: {
-        alpha: { from: 0, to: 1 },
-      },
-      onComplete: () => {
-        this.tweens.add({
-          targets: volleyLogo,
-          delay: 500,
-          props: {
-            alpha: { from: 1, to: 0 },
-          },
-          onComplete: () => {
-            this.fullLoaded.loadingAds = true;
-          },
-        });
-      },
-    });
+    // this.tweens.add({
+    //   targets: volleyLogo,
+    //   delay: 500,
+    //   props: {
+    //     alpha: { from: 0, to: 1 },
+    //   },
+    //   onComplete: () => {
+    //     this.tweens.add({
+    //       targets: volleyLogo,
+    //       delay: 500,
+    //       props: {
+    //         alpha: { from: 1, to: 0 },
+    //       },
+    //       onComplete: () => {
+    //         this.fullLoaded.loadingAds = true;
+    //       },
+    //     });
+    //   },
+    // });
 
     this.load.once(Phaser.Loader.Events.COMPLETE, () => {
       this.fullLoaded.assetsLoaded = true;
