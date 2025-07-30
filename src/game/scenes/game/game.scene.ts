@@ -122,6 +122,7 @@ export class GameScene extends Phaser.Scene {
       .setFontFamily("monospace")
       .setOrigin(0)
       .setScrollFactor(0)
+      .setVisible(import.meta.env.DEV)
       .setDepth(Infinity);
 
     this.input.keyboard?.on(Phaser.Input.Keyboard.Events.KEY_DOWN + "D", () => {

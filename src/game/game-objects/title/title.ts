@@ -116,7 +116,7 @@ export class TitleGameObject {
           onComplete: resolve,
           props: {
             y,
-            alpha: 0.5,
+            alpha: 0,
           },
         });
       }),

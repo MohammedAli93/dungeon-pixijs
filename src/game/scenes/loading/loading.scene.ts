@@ -1,7 +1,6 @@
 export class LoadingScene extends Phaser.Scene {
   private fullLoaded = {
     once: false,
-    loadingAds: false,
     assetsLoaded: false,
   };
 
@@ -79,37 +78,10 @@ export class LoadingScene extends Phaser.Scene {
   }
 
   create() {
-    // const { width, height } = this.scale;
-
-    // const volleyLogo = this.add
-    //   .image(width / 2, height / 2, "scenes.loading.volley-logo")
-    //   .setAlpha(0);
-
-    // this.tweens.add({
-    //   targets: volleyLogo,
-    //   delay: 500,
-    //   props: {
-    //     alpha: { from: 0, to: 1 },
-    //   },
-    //   onComplete: () => {
-    //     this.tweens.add({
-    //       targets: volleyLogo,
-    //       delay: 500,
-    //       props: {
-    //         alpha: { from: 1, to: 0 },
-    //       },
-    //       onComplete: () => {
-    //         this.fullLoaded.loadingAds = true;
-    //       },
-    //     });
-    //   },
-    // });
-
     this.load.once(Phaser.Loader.Events.COMPLETE, () => {
       this.fullLoaded.assetsLoaded = true;
       // Dev purpose.
       if (import.meta.env.DEV) {
-        this.fullLoaded.loadingAds = true;
         this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
         // setTimeout(() => {
         //   this.scene.start("game", { dataKey: "scenes.game.mushroom-forest.data" });
@@ -123,7 +95,6 @@ export class LoadingScene extends Phaser.Scene {
   update() {
     if (
       !this.fullLoaded.once &&
-      this.fullLoaded.loadingAds &&
       this.fullLoaded.assetsLoaded
     ) {
       this.fullLoaded.once = true;
