@@ -142,7 +142,7 @@ export class TitleGameObject {
       .setFontFamily("Magra-Regular")
       .setScrollFactor(0)
       .setWordWrapWidth(wrapWidth)
-      .setDepth(Infinity);
+      .setDepth(0);
   }
 
   public async runAndStopAtEnd() {
