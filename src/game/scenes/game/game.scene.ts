@@ -32,7 +32,6 @@ export class GameScene extends Phaser.Scene {
     this.assetLoadTime = performance.now();
     const { width, height } = this.scale;
     const data = parseGameData(this.cache.json.get(dataKey));
-    const sound = this.sound.add("scenes.game.dmitri.dialogue");
     console.log(data);
 
     // Background video setup (disabled)
@@ -112,22 +111,9 @@ export class GameScene extends Phaser.Scene {
     new TopBarGameObject(this);
 
     this.input.once(Phaser.Input.Events.POINTER_DOWN, () => {
+      const sound = this.sound.add("scenes.game.dmitri.dialogue");
       sound.play();
       title.runAndStopAtEnd();
-    });
-    
-    document.addEventListener("visibilitychange", function() {
-      if (document.hidden) {
-        // The tab is now hidden (user switched to another tab or minimized the browser)
-        console.log("Browser tab is hidden.");
-        // Perform actions when the tab becomes hidden
-        sound.pause();
-      } else {
-        // The tab is now visible (user switched back to this tab or restored the browser)
-        console.log("Browser tab is visible.");
-        sound.resume();
-        // Perform actions when the tab becomes visible
-      }
     });
 
     this.debugText = this.add
