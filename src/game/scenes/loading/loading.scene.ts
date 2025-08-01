@@ -35,6 +35,7 @@ export class LoadingScene extends SceneBase {
     await this.loadAsset("top-bar-tooltips-background", "top-bar-tooltips-background.webp");
     await this.loadAsset("top-bar-tooltips-mic", "top-bar-tooltips-mic.webp");
     await this.loadAsset("top-bar-tooltips-video", "top-bar-tooltips-video.webp");
+    await this.loadAsset("top-bar-dm", "top-bar-dm.png");
     await this.loadAsset("hold-to-talk", "hold-to-talk.webp");
     await this.loadAsset("text-to-game-master-background", "text-to-game-master-background.webp");
     await this.loadAsset("bottom-background", "bottom-background.webp");

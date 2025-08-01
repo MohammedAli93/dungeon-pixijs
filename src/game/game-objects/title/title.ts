@@ -24,9 +24,17 @@ export class TitleGameObject {
     const y = (height * HEIGHT_PERCENTAGE) / 2;
     this.header.text = titles[0].text.join(" ");
     this.header.position.set(width / 2, y);
+    this.header.alpha = 0;
     this.oldHeader.text = titles[1].text.join(" ");
     this.oldHeader.position.set(width / 2, 0);
     this.oldHeader.alpha = 0;
+
+    gsap.to(this.header, {
+      duration: 0.5,
+      pixi: {
+        alpha: 1,
+      },
+    });
 
     // for (const header of this.headers) {
     //   header.enableFilters();
@@ -110,7 +118,7 @@ export class TitleGameObject {
 
   private async moveHeaderToOldHeader() {
     // const blur = this.header.getData("blur") as Phaser.Filters.Blur;
-    const y = 0;
+    const y = (this.scene.app.screen.height * HEIGHT_PERCENTAGE) / 4;
 
     return Promise.all([
       new Promise((resolve) => {
@@ -119,7 +127,7 @@ export class TitleGameObject {
           onComplete: resolve,
           pixi: {
             positionY: y,
-            alpha: 1,
+            alpha: 0,
           },
         });
       }),

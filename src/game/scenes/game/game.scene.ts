@@ -25,15 +25,24 @@ export class GameScene extends SceneBase {
   private assetLoadTime: number = 0;
   private errorCount: number = 0;
   private warningCount: number = 0;
-  debugText: PIXI.Text;
+  public debugText: PIXI.Text;
   private canvasInside?: HTMLCanvasElement;
   public particlesEmitter: ParticlesEmitter;
+  public fps: number = 0;
 
   async onCreate({ dataKey }: GameSceneData) {
     this.assetLoadTime = performance.now();
     const { width, height } = this.app.screen;
     const data = parseGameData(PIXI.Assets.get((dataKey)));
     this.particlesEmitter = new ParticlesEmitter(this);
+
+    const BGM = new Howl({
+      src: ["assets/scenes/game/dmitri/dmitri-bgm.wav"],
+      loop: true,
+      volume: 0.15,
+      autoplay: true,
+    })
+    BGM.play();
 
     // Background video setup (disabled)
     setBackgroundVideo(data.backgroundVideo);
@@ -55,9 +64,6 @@ export class GameScene extends SceneBase {
         character.setOrigin(characterData.origin.x, characterData.origin.y);
       }
     });
-
-    // Title
-    const title = new TitleGameObject(this, data.title.texts);
 
     if (data.enableMic) {
       const bottomBackground = PIXI.Sprite.from("scenes.game.bottom-background");
@@ -126,18 +132,23 @@ export class GameScene extends SceneBase {
 
     this.app.stage.eventMode = 'static';
     this.app.stage.hitArea = this.app.screen;
-    const onMouseDown = () => {
-      const sound = new Howl({
+    const onPointerDown = () => {
+      const dialogueSound = new Howl({
         src: ["assets/scenes/game/dmitri/dialogue.m4a"],
       })
-      sound.play();
-      title.runAndStopAtEnd();
-      this.app.stage.off("mousedown", onMouseDown);
+      dialogueSound.play();
+
+      // Title
+      const title = new TitleGameObject(this, data.title.texts);
+      setTimeout(() => {
+        title.runAndStopAtEnd();
+      }, 1_000);
+      this.app.stage.off("pointerdown", onPointerDown);
     }
-    this.app.stage.on('mousedown', onMouseDown);
+    this.app.stage.on('pointerdown', onPointerDown);
 
     this.debugText = new PIXI.Text({
-      x: 10,
+      x: 25,
       y: 10,
       style: {
         fontSize: 38,
@@ -154,53 +165,16 @@ export class GameScene extends SceneBase {
       }
     });
 
-    
-    const particleTexture = PIXI.Texture.from('assets/particle.webp');
-    const particleContainer = new PIXI.Container();
-    // app.stage.addChild(particleContainer);
-
-    // Example: Emit particles when clicking
-    this.app.stage.eventMode = 'static';
-    this.app.stage.on('pointerdown', (e) => {
-      // spawnParticles(particleContainer, particleTexture, e.global.x, e.global.y);
-      this.particlesEmitter.emit({
-        texture: particleTexture,
-        lifetime: {
-          min: 0.5,
-          max: 0.5
-        },
-        color: 0xffdd33,
-        // frequency: 0.008,
-        spawnChance: 1,
-        particlesPerWave: 1,
-        emitterLifetime: 0.31,
-        maxParticles: 10,
-        pos: {
-          x: e.global.x,
-          y: e.global.y
-        },
-        scale: {
-          min: 0.3,
-          max: 0.7
-        },
-        velocity: {
-          min: -200,
-          max: 200
-        }
-      });
-    });
-
     setInterval(() => {
       this.fps = this.app.ticker.FPS;
     }, 100);
   }
-  fps: number = 0;
 
   onUpdate(ticker: PIXI.Ticker): void {
     if (this.canvasInside) {
       updateBackgroundContainer(this.canvasInside);
     }
-    const fps = this.fps;//ticker.FPS;
+    const fps = this.fps;
     const frameTime = 1000 / fps;
     // Smooth FPS samples for average
     if (!this.fpsSamples) this.fpsSamples = [];

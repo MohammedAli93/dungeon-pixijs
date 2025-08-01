@@ -25,9 +25,16 @@
                 style="
                     width: 100%;
                     height: 20%;
-                    /* backdrop-filter: blur(3px); */
                 "
             ></div>
+        </div>
+        
+        <div
+            id="foreground-container"
+            style="position: absolute; z-index: 99999; pointer-events: none; top: 0; left: 0"
+        >
+            <div class="edge-blur"></div>
+            <div class="edge-blur right"></div>
         </div>
     </div>
     <script type="module" src="/src/game/main.ts"></script>
