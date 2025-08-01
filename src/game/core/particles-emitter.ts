@@ -26,6 +26,10 @@ export interface ParticlesEmitterOptions {
     x: number;
     y: number;
   };
+  spawnArea?: {
+    width: number;
+    height: number;
+  };
 }
 
 export class ParticlesEmitter {
@@ -84,9 +88,16 @@ class ParticlesContainer extends PIXI.Container {
   }
 
   private fire() {
-    const { texture, maxParticles } = this.options;
+    const { texture, maxParticles, spawnArea } = this.options;
+
     for (let i = 0; i < maxParticles; i++) {
       const particle = new Particle(texture, this.options);
+
+      if (spawnArea) {
+        particle.x = (Math.random() - 0.5) * spawnArea.width;
+        particle.y = (Math.random() - 0.5) * spawnArea.height;
+      }
+
       this.addChild(particle);
     }
   }
@@ -105,6 +116,7 @@ class Particle extends PIXI.Sprite {
   velocity: PIXI.Point;
   lifetime: number = 1;
   age: number = 0;
+  private _scaleValue: number = 1;
 
   constructor(texture: PIXI.Texture, options: ParticlesEmitterOptions) {
     super(texture);
@@ -118,10 +130,10 @@ class Particle extends PIXI.Sprite {
     this.lifetime = lifetime.min + Math.random() * lifetime.max;
 
     this.anchor.set(0.5);
-    this.scale.set(scale.min + Math.random() * scale.max);
+    this._scaleValue = scale.min + Math.random() * scale.max;
+    this.scale.set(this._scaleValue);
     if (typeof color === "number") this.tint = color;
     this.alpha = 1;
-    this.blendMode = "add";
 
     // Optional: Add glow
     // this.filters = [
@@ -141,7 +153,7 @@ class Particle extends PIXI.Sprite {
 
     this.age += dt;
     this.alpha = 1 - this.age / this.lifetime;
-    this.scale = 1 - this.age / this.lifetime + 0.25;
+    this.scale = this._scaleValue * (this.age / this.lifetime + 0.25);
 
     if (this.age >= this.lifetime) {
       this.destroy();

@@ -75,6 +75,7 @@ export class TasksObject {
 
     // Icon
     const icon = new PIXI.Sprite(PIXI.Assets.get(`scenes.game.task-icon${completed ? "-checked" : ""}`));
+    icon.position.x = icon.width / 4;
     icon.anchor.set(0, 0.5);
     icon.eventMode = "none";
     task.addChild(icon);
