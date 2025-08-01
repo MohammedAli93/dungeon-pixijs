@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { type GameScene } from "../../scenes/game/game.scene";
-import { GlowFilter } from "@pixi/filter-glow";
+import { GlowFilter } from "pixi-filters";
 import { HudComponent } from "./components/hud";
 
 export interface CharacterData {
@@ -74,13 +74,9 @@ export class Character {
     //   .setName("avatar");
     const maxHeight = 550;
     const scale = Math.min(maxHeight / avatar.width, 1);
-    avatar.filters = [new GlowFilter({
-      distance: 15,        // How far the glow spreads
-      outerStrength: 8,    // Glow strength outside the sprite
-      innerStrength: 0,    // Optional: glow inside the sprite
-      color: 0xffff00,     // Optional: glow color (default white)
-      quality: 0.5
-    }) as any];
+    avatar.filters = [
+      new GlowFilter({ distance: 15, outerStrength: 2, color: this.randomHexColor }),
+    ];
     // avatar.filters = [new GlowFilter({color: 0x00ff00, distance: 10, outerStrength: 4, innerStrength: 1, quality: 0.1, knockout: false, alpha: true})];
 
     // avatar.filters = [GlowFilter]
