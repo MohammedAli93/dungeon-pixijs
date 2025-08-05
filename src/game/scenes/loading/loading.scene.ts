@@ -1,183 +1,88 @@
 import * as PIXI from "pixi.js";
 import { SceneBase } from "../../core/scene-manager";
+import { GlowFilter } from "pixi-filters";
+import { cache } from "../../core/loader";
+import { parseGameData } from "../../utils/game-data-parser";
+
+const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
 
 export class LoadingScene extends SceneBase {
-  private fullLoaded = {
-    once: false,
-    assetsLoaded: false,
-  };
-
-  async startLoadingAssets() {
-    // Global Assets
-    this.setLoadPath("assets");
-    this.setLoadPrefix();
-
-    await this.loadAsset("particle", "particle.webp");
-    await this.loadAsset("shadow", "shadow.webp");
-
-    // Game Scene Assets
-    this.setLoadPath("assets/scenes/game");
-    this.setLoadPrefix("scenes.game.");
-
-    // await this.load.video("background-video", "background3.webm", true);
-    await this.loadAsset("hp-bar", "hp-bar.webp");
-    await this.loadAsset("task-background", "task-background.webp");
-    await this.loadAsset("task-icon", "task-icon.webp");
-    await this.loadAsset("task-icon-checked", "task-icon-checked.webp");
-    await this.loadAsset("zone-button-blocked", "zone-button-blocked.webp");
-    await this.loadAsset("top-bar-avatar-01", "top-bar-avatar-01.webp");
-    await this.loadAsset("top-bar-avatar-02", "top-bar-avatar-02.webp");
-    await this.loadAsset("top-bar-avatar-03", "top-bar-avatar-03.webp");
-    await this.loadAsset("top-bar-background", "top-bar-background.webp");
-    await this.loadAsset("top-bar-button-chat-history", "top-bar-button-chat-history.webp");
-    await this.loadAsset("top-bar-button-menu", "top-bar-button-menu.webp");
-    await this.loadAsset("top-bar-tooltips-audio", "top-bar-tooltips-audio.webp");
-    await this.loadAsset("top-bar-tooltips-background", "top-bar-tooltips-background.webp");
-    await this.loadAsset("top-bar-tooltips-mic", "top-bar-tooltips-mic.webp");
-    await this.loadAsset("top-bar-tooltips-video", "top-bar-tooltips-video.webp");
-    await this.loadAsset("top-bar-dm", "top-bar-dm.png");
-    await this.loadAsset("hold-to-talk", "hold-to-talk.webp");
-    await this.loadAsset("text-to-game-master-background", "text-to-game-master-background.webp");
-    await this.loadAsset("bottom-background", "bottom-background.webp");
-
-    // Dmitri
-    this.setLoadPrefix("scenes.game.dmitri.");
-    await this.loadAsset("zone-button-altar", "dmitri/zone-button-altar.webp");
-    await this.loadAsset(
-      "zone-button-dmitri",
-      "dmitri/zone-button-dmitri.webp"
-    );
-    await this.loadAsset(
-      "zone-button-mushroom-forest",
-      "dmitri/zone-button-mushroom-forest.webp"
-    );
-    // await this.load.audio("dialogue", "dmitri/dialogue.m4a");
-    await this.loadAsset("data", "dmitri/dmitri.json");
-
-    // Chatacter Assets
-    this.setLoadPath("assets/characters");
-    this.setLoadPrefix("characters.mushroom-forest.");
-
-    await this.loadAsset("frogman", "character-frogman.webp");
-    await this.loadAsset("king", "character-king.webp");
-    await this.loadAsset("knight", "character-knight.webp");
-    await this.loadAsset("medusa", "character-medusa.webp");
-
-    await this.setLoadPath("assets/scenes/game/dmitri");
-    await this.setLoadPrefix("characters.dmitri.");
-    await this.loadAsset("king", "king.webp");
-    await this.loadAsset("knight", "knight.webp");
-    await this.loadAsset("medusa", "medusa.webp");
-    // // Global Assets
-    // this.setLoadPath("assets");
-    // this.setLoadPrefix();
-
-    // await this.loadAsset("particle", "particle.webp");
-    // await this.loadAsset("shadow", "shadow.webp");
-
-    // // Game Scene Assets
-    // this.setLoadPath("assets/scenes/game");
-    // this.setLoadPrefix("scenes.game.");
-
-    // await this.loadAsset("hp-bar", "hp-bar.webp");
-    // await this.loadAsset("task-background", "task-background.webp");
-    // await this.loadAsset("task-icon", "task-icon.webp");
-    // await this.loadAsset("task-icon-checked", "task-icon-checked.webp");
-    // await this.loadAsset("zone-button-blocked", "zone-button-blocked.webp");
-    // await this.loadAsset("mic-background", "mic-background.webp"); // TODO: Remove
-    // await this.loadAsset("top-bar-avatar-01", "top-bar-avatar-01.webp");
-    // await this.loadAsset("top-bar-avatar-02", "top-bar-avatar-02.webp");
-    // await this.loadAsset("top-bar-avatar-03", "top-bar-avatar-03.webp");
-    // await this.loadAsset("top-bar-background", "top-bar-background.webp");
-    // await this.loadAsset(
-    //   "top-bar-button-chat-history",
-    //   "top-bar-button-chat-history.webp"
-    // );
-    // await this.loadAsset("top-bar-button-menu", "top-bar-button-menu.webp");
-    // await this.loadAsset(
-    //   "top-bar-tooltips-audio",
-    //   "top-bar-tooltips-audio.webp"
-    // );
-    // await this.loadAsset(
-    //   "top-bar-tooltips-background",
-    //   "top-bar-tooltips-background.webp"
-    // );
-    // await this.loadAsset("top-bar-tooltips-mic", "top-bar-tooltips-mic.webp");
-    // await this.loadAsset(
-    //   "top-bar-tooltips-video",
-    //   "top-bar-tooltips-video.webp"
-    // );
-    // await this.loadAsset("hold-to-talk", "hold-to-talk.webp");
-    // await this.loadAsset(
-    //   "text-to-game-master-background",
-    //   "text-to-game-master-background.webp"
-    // );
-
-    // // Mushroom Forest
-    // this.setLoadPrefix("scenes.game.mushroom-forest.");
-    // await this.loadAsset(
-    //   "zone-button-mushroom-forest",
-    //   "mushroom-forest/zone-button-mushroom-forest.webp"
-    // );
-    // await this.loadAsset("data", "mushroom-forest/mushroom-forest.json");
-
-    // // Dmitri
-    // this.setLoadPrefix("scenes.game.dmitri.");
-    // await this.loadAsset("zone-button-altar", "dmitri/zone-button-altar.webp");
-    // await this.loadAsset(
-    //   "zone-button-dmitri",
-    //   "dmitri/zone-button-dmitri.webp"
-    // );
-    // await this.loadAsset(
-    //   "zone-button-mushroom-forest",
-    //   "dmitri/zone-button-mushroom-forest.webp"
-    // );
-    // // await this.loadAsset("dialogue", "dmitri/dialogue.m4a");
-    // await this.loadAsset("data", "dmitri/dmitri.json");
-
-    // // Chatacter Assets
-    // this.setLoadPath("assets/characters");
-    // this.setLoadPrefix("characters.mushroom-forest.");
-
-    // await this.loadAsset("frogman", "character-frogman.webp");
-    // await this.loadAsset("king", "character-king.webp");
-    // await this.loadAsset("knight", "character-knight.webp");
-    // await this.loadAsset("medusa", "character-medusa.webp");
-
-    // this.setLoadPath("assets/scenes/game/dmitri");
-
-    // this.setLoadPrefix("characters.dmitri.");
-    // await this.loadAsset("king", "king.webp");
-    // await this.loadAsset("knight", "knight.webp");
-    // await this.loadAsset("medusa", "medusa.webp");
-
-    this.fullLoaded.assetsLoaded = true;
-  }
-
   async onCreate() {
-    await this.startLoadingAssets();
-    console.log("Loading assets", PIXI.Assets.get("particle"));
-    // this.manager.gotoScene("game");
-    // const { width, height } = this.scale;
+    const legendText = new PIXI.Text({
+      text: "Loading assets...",
+      style: {
+        fontSize: 24,
+        fontFamily: "Arial",
+        fill: 0xffffff,
+      },
+      anchor: 0.5,
+      position: {
+        x: this.app.screen.width / 2,
+        y: this.app.screen.height / 2,
+      },
+    });
+    this.container.addChild(legendText);
+    
+    await PIXI.Assets.loadBundle(["general", "game"], (progress) => {
+      legendText.text = `Loading assets... ${Math.round(progress * 100)}%`;
+    });
 
-    // this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-    //
-    //   // Dev purpose.
-    //   if (import.meta.env.DEV) {
-    //     this.fullLoaded.loadingAds = true;
-    //     this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
-    //     // setTimeout(() => {
-    //     //   this.scene.start("game", { dataKey: "scenes.game.mushroom-forest.data" });
-    //     // }, 5000);
-    //   }
-    // });
+    const data = parseGameData(PIXI.Assets.get(("scenes.game.dmitri.data")));
+    const time = performance.now();
+    for (let i = 0; i < data.characters.length; i++) {
+      const key = data.characters[i].key;
+      const glowColor = POOL_COLORS[i % POOL_COLORS.length];
+      const { textures, originalSize, padding } = await this.glowEffect(key, glowColor, (progress) => {
+        const progressValue = i / data.characters.length + (1 / data.characters.length) * progress;
+        legendText.text = `Generating... ${Math.round(progressValue * 100)}%`;
+      });
+      cache.glow[key] = { textures, color: glowColor, originalSize, padding };
+    }
+    cache.glowTime = performance.now() - time;
+    this.manager.gotoScene("game", { dataKey: "scenes.game.dmitri.data" });
   }
 
-  onUpdate() {
-    if (!this.fullLoaded.once && this.fullLoaded.assetsLoaded) {
-      this.fullLoaded.once = true;
-      // this.scene.start("game", { dataKey: "scenes.game.dmitri.data" });
-      this.manager.gotoScene("game", { dataKey: "scenes.game.dmitri.data" });
+  public async glowEffect(key: string, color: number, onProgress?: (progress: number) => void) {
+    const spritesheet = PIXI.Assets.cache.get(key) as PIXI.Spritesheet;
+    const animations = spritesheet.data.animations!;
+    const avatar = PIXI.AnimatedSprite.fromFrames(animations[Object.keys(animations)[0]]);
+    avatar.anchor.set(0.5, 1);
+    const originalSize = { width: avatar.width, height: avatar.height };
+
+    const textures: PIXI.Texture[] = [];
+    const padding = 60;
+    for (let i = 0; i < avatar.textures.length; i++) {
+      const texture = avatar.textures[i] as PIXI.Texture;
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      const rt = this.createGlowTexture(texture as PIXI.Texture, { resolution: cache.glowResolution, color, padding });
+      textures.push(rt)
+      if (onProgress) onProgress(i / avatar.textures.length);
     }
+    await PIXI.Assets.unload(key);
+    avatar.destroy();
+    return { textures, originalSize, padding };
+  };
+  
+  private createGlowTexture(texture: PIXI.Texture, options: { resolution?: number, color?: number, padding?: number }) {
+    const { resolution = 1, color = Math.random() * 0xffffff, padding = 60 } = options;
+    // Render one-time glow texture
+    const sprite = new PIXI.Sprite(texture);
+    sprite.anchor.set(0.5);
+    sprite.scale = resolution;
+    sprite.filters = [
+      new GlowFilter({ distance: 50, outerStrength: 2, color: color })
+    ];
+
+    const w = sprite.width + padding;
+    const h = sprite.height + padding;
+    const rt = PIXI.RenderTexture.create({ width: w, height: h });
+    const glowContainer = new PIXI.Container();
+    sprite.position.set(w / 2, h / 2);
+    glowContainer.addChild(sprite);
+    this.app.renderer.render(glowContainer, { renderTexture: rt });
+    sprite.destroy({ children: true });
+    glowContainer.destroy({ children: true });
+
+    return rt;
   }
 }

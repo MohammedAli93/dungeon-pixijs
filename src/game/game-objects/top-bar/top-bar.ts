@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { SceneBase } from "../../core/scene-manager";
 import { generateButton } from "../../utils/button";
+import gsap from "gsap";
 
 export class TopBarGameObject {
   private scene: SceneBase;
@@ -15,9 +16,8 @@ export class TopBarGameObject {
     this.scene.container.addChild(background);
 
     // Create DM
-    const dm = new PIXI.Sprite(PIXI.Assets.get("scenes.game.top-bar-dm"));
-    dm.position.set(width / 5, background.height / 2 - dm.height / 2);
-    dm.anchor.set(0.5, 0);
+    const dm = this.createDM();
+    dm.position.set(width / 5, background.height / 2);
     this.scene.container.addChild(dm);
 
     // Tooltips group
@@ -98,5 +98,60 @@ export class TopBarGameObject {
 
     container.addChild(avatar1, avatar2, avatar3);
     return container;
+  }
+
+  private createDM() {
+    const container = new PIXI.Container({ label: "dm" });
+    const dm = new PIXI.Sprite(PIXI.Assets.get("scenes.game.top-bar-dm"));
+    dm.anchor.set(0.5);
+    container.addChild(dm);
+
+    const spriteData = PIXI.Assets.get(
+      "scenes.game.top-bar-speaking"
+    ) as PIXI.Spritesheet;
+    const textures = Object.values(spriteData.textures);
+    const speakingAnimation = new PIXI.AnimatedSprite(textures);
+    speakingAnimation.loop = true;
+    speakingAnimation.scale = 0.5;
+    speakingAnimation.anchor.set(0.5, 1);
+    speakingAnimation.position.y = dm.height / 2;
+    speakingAnimation.play();
+    container.addChild(speakingAnimation);
+    const tex = PIXI.Assets.get("scenes.game.top-bar-dm") as PIXI.Texture;
+    const mask = new PIXI.Graphics();
+    mask.circle(0, 0, tex.width / 2).fill();
+    container.addChild(mask);
+    speakingAnimation.mask = mask;
+
+    const border = new PIXI.Graphics();
+    border.circle(0, 0, tex.width / 2).stroke({ color: 0x43efa2, width: 4 });
+    container.addChild(border);
+
+    container.on("set-visible", (visible: boolean) => {
+      gsap.to([speakingAnimation, border], {
+        duration: 0.25,
+        ease: "power1.inOut",
+        pixi: {
+          alpha: visible ? 1 : 0,
+        }
+      })
+    });
+    container.emit("set-visible", false);
+
+    return container;
+  }
+
+  public startSpeaking() {
+    const container = this.scene.container.getChildByLabel("dm") as PIXI.Container;
+    if (container) {
+      container.emit("set-visible", true);
+    }
+  }
+
+  public stopSpeaking() {
+    const container = this.scene.container.getChildByLabel("dm") as PIXI.Container;
+    if (container) {
+      container.emit("set-visible", false);
+    }
   }
 }

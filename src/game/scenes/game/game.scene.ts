@@ -13,8 +13,8 @@ import { generateButton } from "../../utils/button";
 import { parseGameData } from "../../utils/game-data-parser";
 import { Howl } from "howler";
 import { ParticlesEmitter } from "../../core/particles-emitter";
-
-const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
+import { GlowFilter } from "pixi-filters";
+import { cache } from "../../core/loader";
 
 interface GameSceneData {
   dataKey: string;
@@ -52,17 +52,19 @@ export class GameScene extends SceneBase {
     this.canvasInside = gameContainer?.querySelector("canvas") ?? undefined;
 
     // Characters
-    data.characters.forEach((characterData, index) => {
+    const characters: Character[] = [];
+    data.characters.forEach((characterData) => {
       const character = new Character(
         this,
         characterData.position.x,
         characterData.position.y,
         characterData,
-        { color: POOL_COLORS[index % POOL_COLORS.length] }
+        { color: cache.glow[characterData.key].color, speed: characterData.speed, scale: characterData.scale }
       );
       if (characterData.origin) {
         character.setOrigin(characterData.origin.x, characterData.origin.y);
       }
+      characters.push(character);
     });
 
     if (data.enableMic) {
@@ -128,11 +130,11 @@ export class GameScene extends SceneBase {
     );
     tasksObject.checkIfAllTasksCompleted();
 
-    new TopBarGameObject(this);
+    const topBar = new TopBarGameObject(this);
 
     this.app.stage.eventMode = 'static';
     this.app.stage.hitArea = this.app.screen;
-    const onPointerDown = () => {
+    const onPointerDown = async () => {
       const dialogueSound = new Howl({
         src: ["assets/scenes/game/dmitri/dialogue.m4a"],
       })
@@ -140,12 +142,16 @@ export class GameScene extends SceneBase {
 
       // Title
       const title = new TitleGameObject(this, data.title.texts);
-      setTimeout(() => {
-        title.runAndStopAtEnd();
-      }, 1_000);
+      // setTimeout(async () => {
+      await title.runAndStopAtEnd(() => {
+        topBar.startSpeaking();
+      }, () => {
+        topBar.stopSpeaking();
+      });
+      // }, 1_000);
       this.app.stage.off("pointerdown", onPointerDown);
     }
-    this.app.stage.on('pointerdown', onPointerDown);
+    this.app.stage.once('pointerdown', onPointerDown);
 
     this.debugText = new PIXI.Text({
       x: 25,
@@ -157,6 +163,7 @@ export class GameScene extends SceneBase {
       },
     });
     // this.debugText.visible = import.meta.env.DEV;
+    // this.debugText.visible = false;
     this.container.addChild(this.debugText);
 
     window.addEventListener("keydown", (event) => {
@@ -168,6 +175,10 @@ export class GameScene extends SceneBase {
     setInterval(() => {
       this.fps = this.app.ticker.FPS;
     }, 100);
+
+    // var script=document.createElement('script');
+    // script.src='https://rawgit.com/paulirish/memory-stats.js/master/bookmarklet.js';
+    // document.head.appendChild(script);
   }
 
   onUpdate(ticker: PIXI.Ticker): void {
@@ -201,8 +212,8 @@ export class GameScene extends SceneBase {
           0
         )}ms`
       : "~1200ms";
-    const errors = this.errorCount || 0;
-    const warnings = this.warningCount || 0;
+    // const errors = this.errorCount || 0;
+    // const warnings = this.warningCount || 0;
     
     const debugInfo = [
       `[DEBUG MENU] - Press [D] to toggle`,
@@ -213,7 +224,7 @@ export class GameScene extends SceneBase {
       `Resolution: ${res}`,
       `PIXI Screen Resolution: ${this.app.screen.width}x${this.app.screen.height}`,
       `Asset Load Time: ${assetLoadTime}`,
-      `Errors: ${errors} / Warnings: ${warnings}`,
+      `Glow Cache: ${(cache.glowTime / 1_000).toFixed(2)} seconds`,
     ].join("\n");
     this.debugText.text = debugInfo;
   }

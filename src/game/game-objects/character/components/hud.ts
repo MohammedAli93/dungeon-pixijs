@@ -6,6 +6,8 @@ export class HudComponent {
   private nameText: PIXI.Text;
   private roleText: PIXI.Text;
   private hpBar: PIXI.Sprite;
+  public x: number;
+  public y: number;
 
   constructor(character: any, x: number, y: number) {
     this.character = character;
@@ -13,8 +15,8 @@ export class HudComponent {
 
     // Create container
     this.container = new PIXI.Container();
-    this.container.x = x;
-    this.container.y = y;
+    this.x = x;
+    this.y = y;
     this.container.zIndex = 1; // equivalent to setDepth(1)
 
     // Style objects
@@ -52,6 +54,9 @@ export class HudComponent {
   refreshPosition() {
     this.roleText.y = this.hpBar.y - this.hpBar.height - 10;
     this.nameText.y = this.roleText.y - this.roleText.height - 10;
+    const bounds = this.container.getBounds();
+    this.container.x = this.x;
+    this.container.y = this.y - bounds.height / 2;
   }
 
   setName(name: string) {
