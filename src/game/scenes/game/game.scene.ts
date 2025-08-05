@@ -15,6 +15,7 @@ import { Howl } from "howler";
 import { ParticlesEmitter } from "../../core/particles-emitter";
 import { GlowFilter } from "pixi-filters";
 import { cache } from "../../core/loader";
+import { isTVDevice } from "../../utils/responsive";
 
 interface GameSceneData {
   dataKey: string;
@@ -29,6 +30,7 @@ export class GameScene extends SceneBase {
   private canvasInside?: HTMLCanvasElement;
   public particlesEmitter: ParticlesEmitter;
   public fps: number = 0;
+  private isTV: boolean = isTVDevice();
 
   async onCreate({ dataKey }: GameSceneData) {
     this.assetLoadTime = performance.now();
@@ -225,6 +227,7 @@ export class GameScene extends SceneBase {
       `PIXI Screen Resolution: ${this.app.screen.width}x${this.app.screen.height}`,
       `Asset Load Time: ${assetLoadTime}`,
       `Glow Cache: ${(cache.glowTime / 1_000).toFixed(2)} seconds`,
+      `Is TV: ${this.isTV}`,
     ].join("\n");
     this.debugText.text = debugInfo;
   }

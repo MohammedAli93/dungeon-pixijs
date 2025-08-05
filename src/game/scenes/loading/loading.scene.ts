@@ -3,6 +3,7 @@ import { SceneBase } from "../../core/scene-manager";
 import { GlowFilter } from "pixi-filters";
 import { cache } from "../../core/loader";
 import { parseGameData } from "../../utils/game-data-parser";
+import { isTVDevice } from "../../utils/responsive";
 
 const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
 
@@ -22,6 +23,21 @@ export class LoadingScene extends SceneBase {
       },
     });
     this.container.addChild(legendText);
+
+    const debugText = new PIXI.Text({
+      text: `Is TV: ${isTVDevice()}`,
+      style: {
+        fontSize: 24,
+        fontFamily: "Arial",
+        fill: 0xffffff,
+      },
+      anchor: 0,
+      position: {
+        x: 30,
+        y: 30,
+      },
+    });
+    this.container.addChild(debugText);
     
     await PIXI.Assets.loadBundle(["general", "game"], (progress) => {
       legendText.text = `Loading assets... ${Math.round(progress * 100)}%`;
