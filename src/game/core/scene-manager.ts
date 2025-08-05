@@ -1,34 +1,16 @@
 import * as PIXI from "pixi.js";
+import { manifest } from "./loader";
 
 export class SceneBase {
   public key: string;
   public app: PIXI.Application<PIXI.Renderer<HTMLCanvasElement>>;
   public manager: SceneManager;
-  private loadPath: string = "";
-  private loadPrefix: string;
   public container: PIXI.Container;
 
   constructor(key: string, manager: SceneManager) {
     this.key = key;
     this.app = manager.app;
     this.manager = manager;
-  }
-
-  setLoadPath(path?: string) {
-    if (!path) path = "";
-    if (path.endsWith("/")) path = path.slice(0, -1);
-    this.loadPath = path;
-  }
-
-  setLoadPrefix(prefix?: string) {
-    this.loadPrefix = prefix || "";
-  }
-
-  loadAsset(alias: string, src: string) {
-    return PIXI.Assets.load({
-      alias: this.loadPrefix + alias,
-      src: `${this.loadPath}/${src}`,
-    });
   }
 
   async onCreate(data?: unknown) {}
@@ -90,9 +72,7 @@ export class SceneManager {
         this.resize();
 
         await PIXI.Assets.init({
-          texturePreference: {
-            format: ["webp", "png"],
-          }
+          manifest,
         });
 
         Object.entries(scenes).forEach(([key, scene]) => {

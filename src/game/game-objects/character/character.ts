@@ -1,17 +1,13 @@
 import * as PIXI from "pixi.js";
 import { type GameScene } from "../../scenes/game/game.scene";
-import { GlowFilter } from "pixi-filters";
-import { HudComponent } from "./components/hud";
-
-export interface CharacterData {
-  key: string;
-  name: string;
-  role: string;
-}
+import { cache } from "../../core/loader";
+import { type CharacterData } from "../../utils/game-data-parser";
 
 export interface CharacterOptions {
   color?: number;
   particlesShapeWidthFactor?: number;
+  speed?: number;
+  scale?: number;
 }
 
 export class Character {
@@ -19,8 +15,6 @@ export class Character {
   public charData: CharacterData;
   public container: PIXI.Container;
   private randomHexColor: number;
-  private glowSprite: PIXI.Sprite;
-  private shadow: PIXI.Sprite;
 
   constructor(
     scene: GameScene,
@@ -35,38 +29,16 @@ export class Character {
     this.container = new PIXI.Container({ x, y });
     this.scene.container.addChild(this.container);
 
-    // Render one-time glow texture
-    const baseTexture = PIXI.Assets.get(charData.key);
-    const sprite = new PIXI.Sprite(baseTexture);
-    sprite.anchor.set(0.5);
-    sprite.filters = [
-      new GlowFilter({ distance: 70, outerStrength: 2, color: this.randomHexColor })
-    ];
-
-    const padding = 60;
-    const w = sprite.width + padding;
-    const h = sprite.height + padding;
-    const rt = PIXI.RenderTexture.create({ width: w, height: h });
-    const glowContainer = new PIXI.Container();
-    sprite.position.set(w / 2, h / 2);
-    glowContainer.addChild(sprite);
-    this.scene.app.renderer.render(glowContainer, { renderTexture: rt });
-    sprite.destroy({ children: true });
-    glowContainer.destroy({ children: true });
-
-    // Avatar with baked glow
-    const avatar = new PIXI.Sprite(rt);
-    avatar.label = "avatar";
-    avatar.anchor.set(0.5, 1);
-    const maxHeight = 550;
-    const scale = Math.min(maxHeight / avatar.width, 1);
+    const avatar = this.createAvatar(charData.key);
+    avatar.animationSpeed = 1 / (options.speed || 5);
+    const { scale = 1 } = options;
 
     this.container.addChild(avatar);
     this.container.scale.set(scale);
 
     const displayWidth = avatar.width * scale;
     const particlesContainer = this.scene.particlesEmitter.emit({
-      texture: PIXI.Texture.from('assets/particle.webp'),
+      texture: PIXI.Texture.from("/assets/particle.webp"),
       lifetime: {
         min: .5,
         max: 1,
@@ -101,8 +73,8 @@ export class Character {
     const shadow = new PIXI.Sprite(PIXI.Assets.get("shadow"));
     shadow.position.set(x, y);
     shadow.anchor.set(0.5, 1);
-    shadow.alpha = 0.7;
-    shadow.scale.set(1.6);
+    shadow.alpha = 0.5;
+    shadow.scale.set(2);
     this.scene.container.addChild(shadow);
     const avatarWidth = displayWidth * 1.6;
     const scaleShadow = Math.min(
@@ -112,17 +84,18 @@ export class Character {
     shadow.scale.set(scaleShadow);
 
     // HUD
-    this.loadHudComponent(avatar, x, y);
+    this.loadHudComponent(avatar, charData.hudOffset);
   }
 
-  private async loadHudComponent(_avatar: any, x: number, y: number) {
+  private async loadHudComponent(_avatar: any, offset?: { x: number, y: number }) {
     try {
       const avatar = _avatar;
       const module = await import("./components/hud");
+      const hudOffset = offset || { x: 0, y: 0 };
       const hud = new module.HudComponent(
         this,
-        0,
-        -(avatar.height * this.container.scale.y)
+        0 + hudOffset.x,
+        -((avatar.height) * this.container.scale.y) + hudOffset.y
       );
       this.container.addChild(hud.container);
     } catch (error) {
@@ -135,5 +108,22 @@ export class Character {
     if (avatar) {
       avatar.anchor.set(x, y);
     }
+  }
+
+  private createAvatar(key: string) {
+    const cacheGlow = cache.glow[key];
+    const avatar = new PIXI.AnimatedSprite({
+      textures: cacheGlow.textures,
+      label: "avatar",
+    });
+    avatar.anchor.set(0.5, 1);
+    avatar.setSize(cacheGlow.originalSize.width + cacheGlow.padding, cacheGlow.originalSize.height + cacheGlow.padding);
+    avatar.loop = false;
+    avatar.play();
+    avatar.onComplete = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2_000 + Math.random() * 3_000));
+      avatar.gotoAndPlay(0);
+    }
+    return avatar;
   }
 }
