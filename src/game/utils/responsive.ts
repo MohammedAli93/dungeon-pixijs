@@ -1,21 +1,9 @@
 export function isTVDevice() {
-  const userAgent = navigator.userAgent.toLowerCase();
-  // Common keywords found in TV device user agents
-  const tvKeywords = [
-    "smarttv",
-    "googletv",
-    "appletv",
-    "firetv",
-    "roku",
-    "webos",
-    "tizen",
-    "androidtv",
-  ];
-
-  for (const keyword of tvKeywords) {
-    if (userAgent.includes(keyword)) {
-      return true;
-    }
-  }
-  return false;
+  const ua = navigator.userAgent.toLowerCase();
+  return (
+    ua.includes("aft") || // Amazon Fire Tablet/TV (like AFTT, AFTS, AFTMM, etc.)
+    ua.includes("amazonwebappplatform") || // Seen in some Fire OS devices
+    ua.includes("fire os") || // Some include this string
+    (ua.includes("android") && ua.includes("silk")) // Silk browser (Fire TV uses Silk)
+  );
 }
