@@ -37,7 +37,7 @@ export const manifest: PIXI.AssetsManifest = {
         { alias: "scenes.game.top-bar-avatar-01", src: "/assets/scenes/game/top-bar-avatar-01.webp" },
         { alias: "scenes.game.top-bar-avatar-02", src: "/assets/scenes/game/top-bar-avatar-02.webp" },
         { alias: "scenes.game.top-bar-avatar-03", src: "/assets/scenes/game/top-bar-avatar-03.webp" },
-        { alias: "scenes.game.top-bar-background", src: "/assets/scenes/game/top-bar-background.png" },
+        { alias: "scenes.game.top-bar-background", src: "/assets/scenes/game/top-bar-background.webp" },
         { alias: "scenes.game.top-bar-button-chat-history", src: "/assets/scenes/game/top-bar-button-chat-history.webp" },
         { alias: "scenes.game.top-bar-button-menu", src: "/assets/scenes/game/top-bar-button-menu.webp" },
         { alias: "scenes.game.top-bar-tooltips-audio", src: "/assets/scenes/game/top-bar-tooltips-audio.webp" },
