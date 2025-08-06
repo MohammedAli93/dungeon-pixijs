@@ -112,7 +112,7 @@ export class TopBarGameObject {
     const textures = Object.values(spriteData.textures);
     const speakingAnimation = new PIXI.AnimatedSprite(textures);
     speakingAnimation.loop = true;
-    speakingAnimation.scale = 0.5;
+    speakingAnimation.scale = 0.4;
     speakingAnimation.anchor.set(0.5, 1);
     speakingAnimation.position.y = dm.height / 2;
     speakingAnimation.play();
