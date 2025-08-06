@@ -29,8 +29,7 @@ export class Character {
     this.container = new PIXI.Container({ x, y });
     this.scene.container.addChild(this.container);
 
-    const avatar = this.createAvatar(charData.key);
-    avatar.animationSpeed = 1 / (options.speed || 5);
+    const avatar = this.createAvatar(charData.key, 1 / (options.speed || 5));
     const { scale = 1 } = options;
 
     this.container.addChild(avatar);
@@ -110,7 +109,7 @@ export class Character {
     }
   }
 
-  private createAvatar(key: string) {
+  private createAvatar(key: string, animationSpeed: number) {
     const cacheGlow = cache.glow[key];
     const avatar = new PIXI.AnimatedSprite({
       textures: cacheGlow.textures,
@@ -119,10 +118,20 @@ export class Character {
     avatar.anchor.set(0.5, 1);
     avatar.setSize(cacheGlow.originalSize.width + cacheGlow.padding, cacheGlow.originalSize.height + cacheGlow.padding);
     avatar.loop = false;
+    avatar.animationSpeed = animationSpeed;
     avatar.play();
+    let yoyo = true;
     avatar.onComplete = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2_000 + Math.random() * 3_000));
-      avatar.gotoAndPlay(0);
+      if (yoyo) {
+        yoyo = false;
+        avatar.textures = avatar.textures.reverse();
+        avatar.gotoAndPlay(0);
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 2_000 + Math.random() * 3_000));
+        yoyo = true;
+        avatar.textures = avatar.textures.reverse();
+        avatar.gotoAndPlay(0);
+      }
     }
     return avatar;
   }

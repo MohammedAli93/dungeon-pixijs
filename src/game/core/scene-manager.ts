@@ -53,6 +53,7 @@ export class SceneManager {
         width,
         height,
         backgroundAlpha: 0,
+        antialias: true,
       })
       .then(async () => {
         this.loaded = true;
