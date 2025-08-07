@@ -25,11 +25,11 @@ export class TitleGameObject {
     this.header.text = titles[0].text.join(" ");
     this.header.position.set(width / 2, y);
     this.header.alpha = 0;
-    this.header.zIndex = -9999;
+    this.header.zIndex = -1;
     this.oldHeader.text = titles[1].text.join(" ");
     this.oldHeader.position.set(width / 2, 0);
     this.oldHeader.alpha = 0;
-    this.oldHeader.zIndex = -9999;
+    this.oldHeader.zIndex = -1;
 
     gsap.to(this.header, {
       duration: 0.5,

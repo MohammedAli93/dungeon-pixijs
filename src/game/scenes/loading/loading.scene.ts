@@ -5,7 +5,8 @@ import { cache } from "../../core/loader";
 import { parseGameData } from "../../utils/game-data-parser";
 import { isTVDevice } from "../../utils/responsive";
 
-const POOL_COLORS = [0xff876c, 0xf8ff6c, 0xbe6cff];
+const POOL_COLORS = [0xf8ff6c, 0xff876c, 0xbe6cff];
+const ENABLE_GLOW = true;
 
 export class LoadingScene extends SceneBase {
   async onCreate() {
@@ -67,6 +68,9 @@ export class LoadingScene extends SceneBase {
 
     const textures: PIXI.Texture[] = [];
     const padding = 60;
+    if (!ENABLE_GLOW) {
+      return { textures: avatar.textures as PIXI.Texture[], originalSize, padding };
+    }
     for (let i = 0; i < avatar.textures.length; i++) {
       const texture = avatar.textures[i] as PIXI.Texture;
       await new Promise((resolve) => setTimeout(resolve, 50));

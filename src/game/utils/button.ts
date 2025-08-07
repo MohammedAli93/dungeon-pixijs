@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { gsap } from "gsap";
 
-export function generateButton(gameObject: PIXI.Sprite, callback?: () => void) {
+export function generateButton<T extends PIXI.Container>(gameObject: T, callback?: () => void) {
   gameObject.alpha = 0.85;
   gameObject.interactive = true;
   gameObject.cursor = "pointer";
