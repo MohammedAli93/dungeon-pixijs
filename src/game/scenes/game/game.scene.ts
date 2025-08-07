@@ -169,15 +169,15 @@ export class GameScene extends SceneBase {
 
     this.debugText = new PIXI.Text({
       x: 25,
-      y: 10,
+      y: 150,
       style: {
-        fontSize: 38,
+        fontSize: 24,
         fontFamily: "monospace",
         fill: 0xffffff,
       },
     });
     // this.debugText.visible = import.meta.env.DEV;
-    this.debugText.visible = false;
+    // this.debugText.visible = false;
     this.container.addChild(this.debugText);
 
     window.addEventListener("keydown", (event) => {

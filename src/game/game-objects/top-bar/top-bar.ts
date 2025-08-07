@@ -20,9 +20,6 @@ export class TopBarGameObject {
     const background = new PIXI.Sprite(
       PIXI.Assets.get("scenes.game.top-bar-background")
     );
-    // const paddingX = 50;
-    // background.width = width - paddingX * 2;
-    // background.x = paddingX;
     this.scene.container.addChild(background);
 
     // Create DM

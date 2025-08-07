@@ -48,6 +48,7 @@ export class SceneManager {
     this.app
       .init({
         // resizeTo: window, // Auto fill the screen
+        resolution: 2,
         // autoDensity: true, // Handles high DPI screens
         // backgroundColor: 0x028af8,
         width,

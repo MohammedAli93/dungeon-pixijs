@@ -47,9 +47,29 @@ export class HudComponent {
 
     // HP bar (assumes texture is already loaded)
     this.hpBar = PIXI.Sprite.from('scenes.game.hp-bar');
-    this.hpBar.anchor.set(0.5, 1);
+    this.hpBar.position.y = -35;
+    this.hpBar.anchor.set(0.5);
     this.hpBar.scale.set(1.5); // 1.5x bigger in both width and height
     this.container.addChild(this.hpBar);
+
+    // @ts-ignore PIXI.Text is not typed correctly.
+    const hpText = new PIXI.Text({
+      text: "20/20",
+      style: {
+        fontFamily: 'Magra-Regular',
+        fontSize: 20,
+        fill: 0xffffff,
+        dropShadow: true,
+        dropShadowDistance: 2,
+        dropShadowBlur: 2,
+      },
+      position: {
+        x: this.hpBar.x,
+        y: this.hpBar.y
+      }
+    });
+    hpText.anchor.set(0.5);
+    this.container.addChild(hpText);
 
     this.refreshPosition();
   }

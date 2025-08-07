@@ -29,7 +29,7 @@ export const manifest: PIXI.AssetsManifest = {
     {
       name: "game",
       assets: [
-        { alias: "scenes.game.hp-bar", src: "/assets/scenes/game/hp-bar.webp" },
+        { alias: "scenes.game.hp-bar", src: "/assets/scenes/game/hp-bar.png" },
         { alias: "scenes.game.task-background", src: "/assets/scenes/game/task-background.png" },
         { alias: "scenes.game.task-background-info", src: "/assets/scenes/game/task-background-info.png" },
         { alias: "scenes.game.task-icon", src: "/assets/scenes/game/task-icon.png" },
