@@ -79,7 +79,7 @@ export class GameScene extends SceneBase {
 
     if (data.enableMic) {
       const bottomBackground = PIXI.Sprite.from("scenes.game.bottom-background");
-      bottomBackground.position.set(width / 2, height + 100);
+      bottomBackground.position.set(width / 2, height + 50);
       bottomBackground.anchor.set(0.5, 1);
       bottomBackground.scale.set(1.1);
       bottomBackground.zIndex = 2;

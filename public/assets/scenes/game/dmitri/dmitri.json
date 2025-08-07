@@ -7,7 +7,7 @@
       {
         "text": ["Welcome! I'm Sir Bart Stageforth, your friendly Game Master."],
         "duration": 4500,
-        "wait": 1250
+        "wait": 1100
       },
       {
         "text": [
@@ -21,7 +21,7 @@
           "Goku, a Saiyan, adorned with Saiyan warrior clothing, wielding staff that can lengthen."
         ],
         "duration": 4250,
-        "wait": 1250
+        "wait": 1100
       },
       {
         "text": ["Prepare yourselves now as we begin our tale!"],

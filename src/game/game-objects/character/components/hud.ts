@@ -48,6 +48,7 @@ export class HudComponent {
     // HP bar (assumes texture is already loaded)
     this.hpBar = PIXI.Sprite.from('scenes.game.hp-bar');
     this.hpBar.anchor.set(0.5, 1);
+    this.hpBar.scale.set(1.5); // 1.5x bigger in both width and height
     this.container.addChild(this.hpBar);
 
     // @ts-ignore PIXI.Text is not typed correctly.
