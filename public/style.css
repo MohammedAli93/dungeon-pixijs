@@ -146,11 +146,13 @@ canvas {
 }
 
 .top-bar.left {
-  left: calc((50 / 1920) * 100%);
+  left: calc((30 / 1920) * 100%);
   transform: translateX(-100%);
+  opacity: .4;
 }
 
 .top-bar.right {
-  right: calc(((50 / 1920) * 100%));
+  right: calc(((20 / 1920) * 100%));
   transform: translateX(100%);
+    opacity: .4;
 }
