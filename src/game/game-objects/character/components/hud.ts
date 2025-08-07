@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
+import { trimText } from '../../../utils/responsive';
+import { type Character } from '../character';
 
 export class HudComponent {
-  private character: any; // Replace with a proper Character interface if needed
+  private character: Character;
   public container: PIXI.Container;
   private nameText: PIXI.Text;
   private roleText: PIXI.Text;
@@ -9,7 +11,7 @@ export class HudComponent {
   public x: number;
   public y: number;
 
-  constructor(character: any, x: number, y: number) {
+  constructor(character: Character, x: number, y: number) {
     this.character = character;
     const charData = this.character.charData;
 
@@ -17,24 +19,24 @@ export class HudComponent {
     this.container = new PIXI.Container();
     this.x = x;
     this.y = y;
-    this.container.zIndex = 1; // equivalent to setDepth(1)
+    this.container.zIndex = 1;
 
     // Style objects
     const nameStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 20,
+      fontSize: 24,
       fontWeight: 'bold',
       fill: 0xffffff,
     });
 
     const roleStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 16,
+      fontSize: 20,
       fill: 0xffffff,
     });
 
     // Name text
-    this.nameText = new PIXI.Text({ text: charData.name, style: nameStyle });
+    this.nameText = new PIXI.Text({ text: trimText(charData.name, 12), style: nameStyle });
     this.nameText.anchor.set(0.5, 1);
     this.container.addChild(this.nameText);
 

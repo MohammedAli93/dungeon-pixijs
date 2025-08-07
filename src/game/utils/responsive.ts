@@ -80,3 +80,10 @@ export function handleVideo(
   }
   if (options.borderColor) video.style.setProperty("--border-color-avatar", options.borderColor);
 }
+
+export function trimText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + "...";
+  }
+  return text;
+}
