@@ -101,7 +101,7 @@ export class GameScene extends SceneBase {
         y: textToGameMasterBackground.y,
         text: "Text to Game Master",
         style: {
-          fontSize: 16,
+          fontSize: 20,
           fontFamily: "Magra-Regular",
           fill: 0xffffff,
           fontStyle: "bold",
@@ -177,7 +177,7 @@ export class GameScene extends SceneBase {
       },
     });
     // this.debugText.visible = import.meta.env.DEV;
-    // this.debugText.visible = false;
+    this.debugText.visible = false;
     this.container.addChild(this.debugText);
 
     window.addEventListener("keydown", (event) => {

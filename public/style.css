@@ -61,7 +61,7 @@ canvas {
 .edge-blur {
   position: absolute;
   top: -12.5px;
-  width: 50px;
+  width: calc((50 / 1920) * 100%);
   transform: translateX(-50%);
   height: calc(100% + 25px);
   z-index: 9999999;
@@ -134,4 +134,23 @@ canvas {
   animation-play-state: paused; */
   border: 2px solid var(--border-color-avatar, #43efa2);
   border-radius: 5px;
+}
+
+.top-bar {
+  position: absolute;
+  top: 0px;
+  height: calc((136 / 1080) * 100%);
+  z-index: 9999999;
+  pointer-events: none;
+  /* opacity: 0.75; */
+}
+
+.top-bar.left {
+  left: calc((50 / 1920) * 100%);
+  transform: translateX(-100%);
+}
+
+.top-bar.right {
+  right: calc(((50 / 1920) * 100%));
+  transform: translateX(100%);
 }

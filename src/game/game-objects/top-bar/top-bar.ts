@@ -20,6 +20,9 @@ export class TopBarGameObject {
     const background = new PIXI.Sprite(
       PIXI.Assets.get("scenes.game.top-bar-background")
     );
+    const paddingX = 50;
+    background.width = width - paddingX * 2;
+    background.x = paddingX;
     this.scene.container.addChild(background);
 
     // Create DM
@@ -68,18 +71,18 @@ export class TopBarGameObject {
 
     // Buttons group (right-aligned)
     const buttons = new PIXI.Container();
-    const btnChat = generateButton(
-      PIXI.Sprite.from("scenes.game.top-bar-button-chat-history")
+    const chatHistoryButton = generateButton(
+      this.createButton("scenes.game.top-bar-button-chat-history", "Chat")
     );
     const btnMenu = generateButton(
-      PIXI.Sprite.from("scenes.game.top-bar-button-menu")
+      this.createButton("scenes.game.top-bar-button-menu", "Menu")
     );
-    btnChat.x = 0;
-    btnMenu.x = btnChat.width + 30;
+    chatHistoryButton.x = 0;
+    btnMenu.x = chatHistoryButton.width + 30;
 
-    buttons.addChild(btnChat, btnMenu);
+    buttons.addChild(chatHistoryButton, btnMenu);
     buttons.x = width - buttons.width - 250;
-    buttons.y = background.height / 2 - btnChat.height / 2;
+    buttons.y = background.height / 2;
     this.scene.container.addChild(buttons);
   }
 
@@ -121,6 +124,29 @@ export class TopBarGameObject {
   //     setPlayerAvatarVideo(3, { ...options, borderColor: "#be6cff" });
   //   }
   // }
+
+  private createButton(key: string, text: string) {
+    const container = new PIXI.Container();
+    const sprite = PIXI.Sprite.from(key);
+    sprite.anchor.set(0.5, 1);
+    // @ts-ignore PIXI.Text is not typed correctly.
+    const textObj = new PIXI.Text({
+      text,
+      style: {
+        fontSize: 22,
+        fontFamily: "Magra-Regular",
+        fill: 0xffffff,
+        dropShadow: true,
+        dropShadowDistance: 3,
+      },
+      anchor: {
+        x: 0.5,
+        y: 0,
+      }
+    });
+    container.addChild(sprite, textObj);
+    return container;
+  }
 
   private createTooltips(): PIXI.Container {
     const container = new PIXI.Container();
@@ -208,7 +234,7 @@ export class TopBarGameObject {
     videoSprite.mask = mask;
 
     const border = new PIXI.Graphics();
-    border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 });
+    border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 0.5 });
     border.zIndex = -1;
     container.addChild(border);
 
@@ -229,7 +255,7 @@ export class TopBarGameObject {
         yoyo: true,
         onUpdate: () => {
           border.clear();
-          border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 + Math.floor(temp.value * 6) });
+          border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 + Math.floor(temp.value * 6), alpha: 1 });
         }
       });
     });
@@ -240,7 +266,7 @@ export class TopBarGameObject {
         tween = undefined;
       }
       border.clear();
-      border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 });
+      border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 0.5 });
     });
 
     return container;
