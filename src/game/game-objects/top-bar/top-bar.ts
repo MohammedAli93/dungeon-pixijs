@@ -231,7 +231,7 @@ export class TopBarGameObject {
     videoSprite.mask = mask;
 
     const border = new PIXI.Graphics();
-    border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 0.5 });
+    border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 1 });
     border.zIndex = -1;
     container.addChild(border);
 
@@ -252,7 +252,7 @@ export class TopBarGameObject {
         yoyo: true,
         onUpdate: () => {
           border.clear();
-          border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 + Math.floor(temp.value * 6), alpha: 1 });
+          border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 + Math.floor(temp.value * 6), alpha: 0.7 });
         }
       });
     });
@@ -263,7 +263,7 @@ export class TopBarGameObject {
         tween = undefined;
       }
       border.clear();
-      border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 0.5 });
+      border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 1 });
     });
 
     return container;

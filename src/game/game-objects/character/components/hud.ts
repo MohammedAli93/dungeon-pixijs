@@ -50,6 +50,21 @@ export class HudComponent {
     this.hpBar.anchor.set(0.5, 1);
     this.container.addChild(this.hpBar);
 
+    // @ts-ignore PIXI.Text is not typed correctly.
+    const hpText = new PIXI.Text({
+      text: "20/20",
+      style: {
+        fontFamily: 'Magra-Regular',
+        fontSize: 20,
+        fill: 0xffffff,
+        dropShadow: true,
+        dropShadowDistance: 2,
+        dropShadowBlur: 2,
+      },
+    });
+    hpText.anchor.set(0.5, 1);
+    this.container.addChild(hpText);
+
     this.refreshPosition();
   }
 
