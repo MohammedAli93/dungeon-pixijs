@@ -79,7 +79,7 @@ export class GameScene extends SceneBase {
 
     if (data.enableMic) {
       const bottomBackground = PIXI.Sprite.from("scenes.game.bottom-background");
-      bottomBackground.position.set(width / 2, height + 100);
+      bottomBackground.position.set(width / 2, height + 50);
       bottomBackground.anchor.set(0.5, 1);
       bottomBackground.scale.set(1.1);
       bottomBackground.zIndex = 2;
@@ -91,7 +91,7 @@ export class GameScene extends SceneBase {
       generateButton(mic);
       this.container.addChild(mic);
       const textToGameMasterBackground = new PIXI.Sprite(PIXI.Assets.get("scenes.game.text-to-game-master-background"));
-      textToGameMasterBackground.position.set(width / 2 + 4, mic.y + mic.height / 2 + textToGameMasterBackground.height / 2 + 20);
+      textToGameMasterBackground.position.set(width / 2 + 4, mic.y + mic.height / 2 + textToGameMasterBackground.height / 2 + 5);
       textToGameMasterBackground.anchor.set(0.5);
       textToGameMasterBackground.zIndex = 2;
       this.container.addChild(textToGameMasterBackground);

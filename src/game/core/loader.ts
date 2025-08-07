@@ -49,7 +49,7 @@ export const manifest: PIXI.AssetsManifest = {
         { alias: "scenes.game.top-bar-dm", src: "/assets/scenes/game/top-bar-dm.png" },
         { alias: "scenes.game.top-bar-speaking", src: "/assets/scenes/game/top-bar-speaking.json" },
         { alias: "scenes.game.top-bar-blur", src: "/assets/scenes/game/top-bar-blur.png" },
-        { alias: "scenes.game.hold-to-talk", src: "/assets/scenes/game/hold-to-talk.webp" },
+        { alias: "scenes.game.hold-to-talk", src: "/assets/scenes/game/hold-to-talk.png" },
         { alias: "scenes.game.text-to-game-master-background", src: "/assets/scenes/game/text-to-game-master-background.webp" },
         { alias: "scenes.game.bottom-background", src: "/assets/scenes/game/bottom-background.webp" },
         { alias: "scenes.game.dm-avatar", src: "/assets/scenes/game/dm-dialogue.mp4", data: { muted: false, autoPlay: false } },

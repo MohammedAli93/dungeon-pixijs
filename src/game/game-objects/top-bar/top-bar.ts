@@ -228,46 +228,52 @@ export class TopBarGameObject {
     videoSprite.anchor.set(0.5);
     container.addChild(videoSprite);
 
-    const mask = new PIXI.Graphics();
-    mask.circle(0, 0, videoSprite.width / 2).fill();
-    container.addChild(mask);
-    videoSprite.mask = mask;
+const mask = new PIXI.Graphics();
+mask.circle(0, 0, videoSprite.width / 2).fill();
+container.addChild(mask);
+videoSprite.mask = mask;
 
-    const border = new PIXI.Graphics();
-    border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 0.5 });
-    border.zIndex = -1;
-    container.addChild(border);
+const staticBorder = new PIXI.Graphics();
+staticBorder.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 1 });
+staticBorder.zIndex = 1;
+container.addChild(staticBorder);
 
-    let tween: gsap.core.Tween | undefined;
+const effectBorder = new PIXI.Graphics();
+effectBorder.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x98ff98, width: 4, alpha: 0.5 });
+effectBorder.zIndex = -1;
+container.addChild(effectBorder);
 
-    container.on("play-video", () => {
-      const videoSource = videoSprite.texture.source as PIXI.VideoSource;
-      if (videoSource.resource.paused) videoSource.resource.play();
-      if (tween) {
-        tween.kill();
-      }
-      const temp = { value: 0 };
-      tween = gsap.to(temp, {
-        duration: 0.25,
-        ease: "power1.inOut",
-        value: 1,
-        repeat: -1,
-        yoyo: true,
-        onUpdate: () => {
-          border.clear();
-          border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4 + Math.floor(temp.value * 6), alpha: 1 });
-        }
-      });
-    });
+let tween: gsap.core.Tween | undefined;
 
-    container.on("stop-video", () => {
-      if (tween) {
-        tween.kill();
-        tween = undefined;
-      }
-      border.clear();
-      border.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x43efa2, width: 4, alpha: 0.5 });
-    });
+container.on("play-video", () => {
+  const videoSource = videoSprite.texture.source as PIXI.VideoSource;
+  if (videoSource.resource.paused) videoSource.resource.play();
+  if (tween) {
+    tween.kill();
+  }
+  const temp = { value: 0 };
+  tween = gsap.to(temp, {
+    duration: 0.25,
+    ease: "power1.inOut",
+    value: 1,
+    repeat: -1,
+    yoyo: true,
+    onUpdate: () => {
+      effectBorder.clear();
+      effectBorder.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x98ff98, width: 4 + Math.floor(temp.value * 6), alpha: 0.5 });
+    }
+  });
+});
+
+ container.on("stop-video", () => {
+  if (tween) {
+    tween.kill();
+    tween = undefined;
+  }
+  effectBorder.clear();
+  effectBorder.circle(0, 0, videoSprite.width / 2).stroke({ color: 0x98ff98, width: 4, alpha: 0.5 });
+
+});
 
     return container;
   }
