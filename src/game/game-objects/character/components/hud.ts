@@ -30,7 +30,7 @@ export class HudComponent {
     const roleStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
       fontSize: 16,
-      fill: '#FFFFFF99',
+      fill: 0xffffff,
     });
 
     // Name text

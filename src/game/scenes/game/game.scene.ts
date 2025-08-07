@@ -16,6 +16,7 @@ import { ParticlesEmitter } from "../../core/particles-emitter";
 import { GlowFilter } from "pixi-filters";
 import { cache } from "../../core/loader";
 import { isTVDevice } from "../../utils/responsive";
+import { setDMVideo } from "../../../dom/top-bar";
 
 interface GameSceneData {
   dataKey: string;
@@ -47,7 +48,14 @@ export class GameScene extends SceneBase {
     BGM.play();
 
     // Background video setup (disabled)
-    setBackgroundVideo(data.backgroundVideo);
+    // setBackgroundVideo(data.backgroundVideo);
+    const video = new PIXI.Sprite(PIXI.Assets.get("scenes.game.dmitri.background"));
+    video.anchor.set(0.5, 0.5);
+    video.position.set(width / 2, height / 2);
+    video.width = width;
+    video.height = height;
+    video.zIndex = -2;
+    this.container.addChild(video);
 
     // Cache canvas for DOM sync
     const gameContainer = document.getElementById("app") as HTMLDivElement;
@@ -55,7 +63,7 @@ export class GameScene extends SceneBase {
 
     // Characters
     const characters: Character[] = [];
-    data.characters.forEach((characterData) => {
+    data.characters.reverse().forEach((characterData) => {
       const character = new Character(
         this,
         characterData.position.x,
@@ -119,15 +127,15 @@ export class GameScene extends SceneBase {
     });
 
     // Tasks
-    const tasksObject = new TasksObject(this, width - 350, height - 150);
+    const tasksObject = new TasksObject(this, width - 500, height - 150);
     tasksObject.addTask(
       "tavern",
-      "Interrogate townsfolk in the tavern for where Mira was last seen",
+      "Interrogate townsfolk in the tavern for where Jade was last seen",
       false
     );
     tasksObject.addTask(
       "altar",
-      "Get through the field of mushrooms to reach the Sprite Altar",
+      "Disarm Dagger Grin and his band of goblins to rescue Jade",
       true
     );
     tasksObject.checkIfAllTasksCompleted();
@@ -137,17 +145,21 @@ export class GameScene extends SceneBase {
     this.app.stage.eventMode = 'static';
     this.app.stage.hitArea = this.app.screen;
     const onPointerDown = async () => {
-      const dialogueSound = new Howl({
-        src: ["assets/scenes/game/dmitri/dialogue.m4a"],
-      })
-      dialogueSound.play();
+      // const dialogueSound = new Howl({
+      //   src: ["assets/scenes/game/dmitri/dialogue.m4a"],
+      // })
+      // dialogueSound.play();
+      // setDMVideo({ autoPlay: true });
 
       // Title
       const title = new TitleGameObject(this, data.title.texts);
       // setTimeout(async () => {
       await title.runAndStopAtEnd(() => {
         topBar.startSpeaking();
+        // setDMVideo({ borderEffect: true });
+        // topBar.startSpeaking();
       }, () => {
+        // setDMVideo({ borderEffect: true });
         topBar.stopSpeaking();
       });
       // }, 1_000);

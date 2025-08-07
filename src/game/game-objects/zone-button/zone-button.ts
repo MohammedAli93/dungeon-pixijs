@@ -17,17 +17,24 @@ export class ZoneButton {
     this.container = new PIXI.Container({ x, y });
     this.container.zIndex = 3;
     this.scene.container.addChild(this.container);
-    // this.container = this.scene.add.container(x, y).setDepth(3);
 
-    const zone = generateButton(new PIXI.Sprite(PIXI.Assets.get(key)));
+    const zone = new PIXI.Sprite(PIXI.Assets.get(key));
     zone.anchor.set(0.5);
     this.container.addChild(zone);
+    if (key === "scenes.game.dmitri.zone-button-dmitri") {
+      const topName = new PIXI.Sprite(PIXI.Assets.get("scenes.game.dmitri.zone-button-dmitri-location"));
+      topName.anchor.set(0.5, 1);
+      topName.position.y = -zone.height / 2;
+      this.container.addChild(topName);
+    }
 
     if (blocked) {
       const blocked = new PIXI.Sprite(PIXI.Assets.get("scenes.game.zone-button-blocked"));
       blocked.anchor.set(0.5);
       blocked.eventMode = "none";
       this.container.addChild(blocked);
+    } else {
+      generateButton(this.container);
     }
   }
 }

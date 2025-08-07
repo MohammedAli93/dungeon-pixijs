@@ -1,5 +1,6 @@
 export function setBackgroundVideo(videoUrl: string) {
-  const video = document.getElementById("game-video") as HTMLVideoElement;
+  const video = document.getElementById("game-video") as HTMLVideoElement | undefined;
+  if (!video) return;
   video.setAttribute("src", videoUrl);
 }
 
