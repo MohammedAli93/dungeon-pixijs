@@ -6,7 +6,7 @@ import { parseGameData } from "../../utils/game-data-parser";
 import { isTVDevice } from "../../utils/responsive";
 
 const POOL_COLORS = [0xf8ff6c, 0xff876c, 0xbe6cff];
-const ENABLE_GLOW = false;
+const ENABLE_GLOW = true;
 
 export class LoadingScene extends SceneBase {
   async onCreate() {

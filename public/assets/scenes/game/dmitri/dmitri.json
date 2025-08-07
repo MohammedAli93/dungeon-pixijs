@@ -6,15 +6,15 @@
     "texts": [
       {
         "text": ["Welcome! I'm Sir Bart Stageforth, your friendly Game Master."],
-        "duration": 4500,
-        "wait": 1100
+        "duration": 4000,
+        "wait": 1000
       },
       {
         "text": [
           "Who has come forth to answer Jade's call? Ah...yes... I see we have brave adventurers indeed..."
         ],
-        "duration": 6500,
-        "wait": 1250
+        "duration": 6000,
+        "wait": 1150
       },
       {
         "text": [
@@ -39,7 +39,7 @@
         "text": [
           "\"Halt there, travelers! I am Captain Dmitri. By Queen Melantha Thornveil's orders, we must question every soul passing through. What business do you have in Timberfall?\""
         ],
-        "duration": 10500,
+        "duration": 10000,
         "wait": 1000
       },
       {
