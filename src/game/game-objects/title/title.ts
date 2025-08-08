@@ -168,17 +168,17 @@ export class TitleGameObject {
 
   public async runAndStopAtEnd(onStart?: () => void, onEnd?: () => void) {
     for (let i = 0; i < this.data.length; i++) {
-      if (onStart) onStart();
       if (i > 0) await this.next(true);
+      if (onStart) onStart();
       const textData = this.data[i];
       await new Promise((resolve) =>
         setTimeout(resolve, textData.duration || 5_000)
       );
-      if (onEnd) onEnd();
       
       await new Promise((resolve) =>
         setTimeout(resolve, textData.wait || 0)
       );
+      if (onEnd) onEnd();
     }
     await this.dissapearAll();
   }
