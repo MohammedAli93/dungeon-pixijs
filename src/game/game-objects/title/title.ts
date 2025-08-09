@@ -12,6 +12,8 @@ export class TitleGameObject {
   private headers: PIXI.Text[] = [];
   private data: TitleData["texts"];
   private currentIndex: number = 0;
+  private wordTexts: PIXI.Text[] = [];
+  private firstTime = true;
 
   constructor(scene: SceneBase, titles: TitleData["texts"]) {
     this.scene = scene;
@@ -22,21 +24,14 @@ export class TitleGameObject {
     this.headers.push(this.createHeader(width * WORD_WRAP_WIDTH_PERCENTAGE));
 
     const y = (height * HEIGHT_PERCENTAGE) / 2;
-    this.header.text = titles[0].text.join(" ");
+    this.header.text = this.getDataText(0);
     this.header.position.set(width / 2, y);
     this.header.alpha = 0;
     this.header.zIndex = -1;
-    this.oldHeader.text = titles[1].text.join(" ");
+    this.oldHeader.text = this.getDataText(1);
     this.oldHeader.position.set(width / 2, 0);
     this.oldHeader.alpha = 0;
     this.oldHeader.zIndex = -1;
-
-    gsap.to(this.header, {
-      duration: 0.5,
-      pixi: {
-        alpha: 1,
-      },
-    });
 
     // for (const header of this.headers) {
     //   header.enableFilters();
@@ -44,6 +39,10 @@ export class TitleGameObject {
     //   const blur = header.filters?.internal.addBlur(0, 2, 2, strength);
     //   header.setData("blur", blur);
     // }
+  }
+
+  private getDataText(index: number) {
+    return this.data[index].text.filter((text) => typeof text === "string").join(" ");
   }
 
   private get header() {
@@ -61,13 +60,13 @@ export class TitleGameObject {
   }
 
   public async next(stopIfLast: boolean = false) {
-    await Promise.all([
-      this.dissapearOldHeader(),
-      this.moveHeaderToOldHeader(),
-    ]);
-    this.swapHeaders();
+    if (this.firstTime) {
+      this.firstTime = false;
+      await this.appearHeader();
+      return;
+    }
     this.currentIndex = (this.currentIndex + 1) % this.data.length;
-    this.header.text = this.data[this.currentIndex].text.join(" ");
+    this.header.text = this.getDataText(this.currentIndex);
     if (stopIfLast && this.currentIndex === this.data.length) {
       return;
     }
@@ -76,6 +75,22 @@ export class TitleGameObject {
 
   private async dissapearOldHeader() {
     const y = -this.oldHeader.height;
+
+    const wordTexts = this.wordTexts;
+    this.wordTexts = [];
+    await Promise.all(wordTexts.map((text) => new Promise<void>((resolve) => {
+      gsap.to(text, {
+        duration: 0.5,
+        onComplete: () => {
+          text.destroy();
+          resolve();
+        },
+        pixi: {
+          positionY: text.position.y - this.oldHeader.height,
+          alpha: 0,
+        },
+      });
+    })));
 
     return new Promise((resolve) => {
       gsap.to(this.oldHeader, {
@@ -94,28 +109,43 @@ export class TitleGameObject {
     const y = (this.scene.app.screen.height * HEIGHT_PERCENTAGE) / 2;
     this.header.position.y = y + this.header.height / 2;
 
-    return Promise.all([
-      new Promise((resolve) => {
-        gsap.to(this.header, {
-          duration: 0.5,
-          onComplete: resolve,
-          pixi: {
-            positionY: y,
-            alpha: 1,
-          },
-        });
-      }),
-      // new Promise((resolve) => {
-      //   this.scene.tweens.add({
-      //     targets: blur,
-      //     duration: 500,
-      //     onComplete: resolve,
-      //     props: {
-      //       strength: 0,
-      //     },
-      //   });
-      // }),
-    ]);
+    const words = this.data[this.currentIndex].text;
+    const { width } = this.scene.app.screen;
+    const wrapWidth = width * WORD_WRAP_WIDTH_PERCENTAGE;
+    let xOffset = 0;
+    let yOffset = 0;
+    const initialX = this.header.position.x - (this.header.width / 2);
+    const initialY = this.header.position.y;
+    const spaceWidth = 1.8;
+
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i];
+      if (typeof word !== "string") continue;
+      let nextWord = words[i + 1];
+      const duration = typeof nextWord === "number" ? nextWord / 1_000 : 0.5;
+
+      const text = this.createText(word);
+      this.wordTexts.push(text);
+      text.anchor.set(0);
+      text.alpha = 0;
+      if (xOffset + text.width + spaceWidth > wrapWidth) {
+        xOffset = 0;
+        yOffset += text.height;
+      }
+      text.position.x = initialX + xOffset;
+      text.position.y = initialY + yOffset;
+      this.scene.container.addChild(text);
+      xOffset += text.width + spaceWidth;
+
+      gsap.to(text, {
+        duration: Math.min(duration, 0.5),
+        pixi: {
+          positionY: text.position.y - this.header.height / 2,
+          alpha: 1,
+        },
+      });
+      await new Promise((resolve) => setTimeout(resolve, duration * 1_000));
+    }
   }
 
   private async moveHeaderToOldHeader() {
@@ -147,11 +177,18 @@ export class TitleGameObject {
   }
 
   private createHeader(wrapWidth: number) {
+    const header = this.createText("");
+    header.style.wordWrap = true;
+    header.style.wordWrapWidth = wrapWidth;
+    this.scene.container.addChild(header);
+    return header;
+  }
+
+  private createText(text: string) {
     // @ts-ignore PixiJS typings are wrong with 'fontStyle'.
-    const header = new PIXI.Text({
+    const textObj = new PIXI.Text({
+      text,
       style: {
-        wordWrap: true,
-        wordWrapWidth: wrapWidth,
         fontSize: 20,
         fontFamily: "Magra-Regular",
         fill: 0xffffff,
@@ -162,23 +199,25 @@ export class TitleGameObject {
         y: 0,
       },
     });
-    this.scene.container.addChild(header);
-    return header;
+    textObj.zIndex = -1;
+
+    return textObj;
   }
 
   public async runAndStopAtEnd(onStart?: () => void, onEnd?: () => void) {
     for (let i = 0; i < this.data.length; i++) {
-      if (i > 0) await this.next(true);
       if (onStart) onStart();
+      await this.next(true);
       const textData = this.data[i];
-      await new Promise((resolve) =>
-        setTimeout(resolve, textData.duration || 5_000)
-      );
-      
-      await new Promise((resolve) =>
-        setTimeout(resolve, textData.wait || 0)
-      );
       if (onEnd) onEnd();
+      this.dissapearOldHeader();
+      this.moveHeaderToOldHeader();
+      this.swapHeaders();
+      const last = textData.text[textData.text.length - 1];
+      const wait = typeof last === "number" ? last : 500;
+      await new Promise((resolve) =>
+        setTimeout(resolve, wait)
+      );
     }
     await this.dissapearAll();
   }
