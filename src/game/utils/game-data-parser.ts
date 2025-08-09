@@ -8,7 +8,7 @@ export interface GameData {
 }
 
 export interface TitleData {
-  texts: { text: string[], duration?: number, wait?: number }[];
+  texts: { text: (string | number)[] }[];
 }
 
 export interface CharacterData {

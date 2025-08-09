@@ -103,7 +103,7 @@ export class GameScene extends SceneBase {
         style: {
           fontSize: 20,
           fontFamily: "Magra-Regular",
-          fill: 0xffffff,
+          fill: "#ffffff99",
           fontStyle: "bold",
         },
         anchor: {
@@ -133,11 +133,11 @@ export class GameScene extends SceneBase {
       "Interrogate townsfolk in the tavern for where Jade was last seen",
       false
     );
-    tasksObject.addTask(
-      "altar",
-      "Disarm Dagger Grin and his band of goblins to rescue Jade",
-      true
-    );
+    // tasksObject.addTask(
+    //   "altar",
+    //   "Disarm Dagger Grin and his band of goblins to rescue Jade",
+    //   true
+    // );
     tasksObject.checkIfAllTasksCompleted();
 
     const topBar = new TopBarGameObject(this);

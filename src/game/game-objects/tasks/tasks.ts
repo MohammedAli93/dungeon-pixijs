@@ -78,27 +78,27 @@ export class TasksObject {
     background.anchor.set(0, 0.5);
     background.alpha = 0.8;
     if (key) {
-      background.interactive = true;
-      background.cursor = "pointer";
-      background.on("pointerover", () => {
-        gsap.to(background, {
-          duration: 0.1,
-          pixi: {
-            alpha: 1,
-          },
-        });
-      });
-      background.on("pointerout", () => {
-        gsap.to(background, {
-          duration: 0.1,
-          pixi: {
-            alpha: 0.8,
-          },
-        });
-      });
-      background.on("pointerdown", () => {
-        this.toggleStatus(key);
-      });
+      // background.interactive = true;
+      // background.cursor = "pointer";
+      // background.on("pointerover", () => {
+      //   gsap.to(background, {
+      //     duration: 0.1,
+      //     pixi: {
+      //       alpha: 1,
+      //     },
+      //   });
+      // });
+      // background.on("pointerout", () => {
+      //   gsap.to(background, {
+      //     duration: 0.1,
+      //     pixi: {
+      //       alpha: 0.8,
+      //     },
+      //   });
+      // });
+      // background.on("pointerdown", () => {
+      //   this.toggleStatus(key);
+      // });
     }
     task.addChild(background);
 
