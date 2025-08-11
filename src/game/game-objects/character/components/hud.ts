@@ -24,14 +24,14 @@ export class HudComponent {
     // Style objects
     const nameStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 30,
+      fontSize: 22,
       fontWeight: 'bold',
       fill: 0xffffff,
     });
 
     const roleStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 25,
+      fontSize: 16,
       fontWeight: 'bold',
       fill: 0xffffff,
     });
@@ -58,7 +58,7 @@ export class HudComponent {
       text: "20/20",
       style: {
         fontFamily: 'Magra-Regular',
-        fontSize: 28,
+        fontSize: 18,
         fill: 0xffffff,
         fontWeight: 'bold',
         dropShadow: true,

@@ -40,7 +40,7 @@ export class TasksObject {
       y: 10,
       text: "Completed",
       style: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Magra-Regular",
         fill: 0xffffff,
       },
@@ -118,7 +118,7 @@ export class TasksObject {
       style: {
         wordWrap: true,
         wordWrapWidth: background.width - icon.width - 20,
-        fontSize: 16,
+        fontSize: 18,
         fontFamily: "Magra-Regular",
         fill: key ? "#FFFFFF99" : "#FFFFFF",
       },

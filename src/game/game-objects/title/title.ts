@@ -189,7 +189,7 @@ export class TitleGameObject {
     const textObj = new PIXI.Text({
       text,
       style: {
-        fontSize: 20,
+        fontSize: 22,
         fontFamily: "Magra-Regular",
         fill: 0xffffff,
 

@@ -101,10 +101,10 @@ export class GameScene extends SceneBase {
         y: textToGameMasterBackground.y,
         text: "Text to Game Master",
         style: {
-          fontSize: 20,
+          fontSize: 18,
           fontFamily: "Magra-Regular",
           fill: "#ffffff99",
-          fontStyle: "bold",
+  
         },
         anchor: {
           x: 0.5,

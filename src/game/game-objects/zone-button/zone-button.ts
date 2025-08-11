@@ -25,6 +25,7 @@ export class ZoneButton {
       const topName = new PIXI.Sprite(PIXI.Assets.get("scenes.game.dmitri.zone-button-dmitri-location"));
       topName.anchor.set(0.5, 1);
       topName.position.y = -zone.height / 2;
+      topName.scale = 1.2;
       this.container.addChild(topName);
     }
 

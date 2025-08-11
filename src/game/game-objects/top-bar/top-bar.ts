@@ -130,7 +130,7 @@ export class TopBarGameObject {
     const textObj = new PIXI.Text({
       text,
       style: {
-        fontSize: 22,
+        fontSize: 18,
         fontFamily: "Magra-Regular",
         fill: 0xffffff,
         dropShadow: true,
