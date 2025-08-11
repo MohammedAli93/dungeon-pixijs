@@ -133,7 +133,7 @@ export class TitleGameObject {
         yOffset += text.height;
       }
       text.position.x = initialX + xOffset;
-      text.position.y = initialY + yOffset;
+      text.position.y = initialY + yOffset - this.header.height / 2;
       this.scene.container.addChild(text);
       xOffset += text.width + spaceWidth;
 
