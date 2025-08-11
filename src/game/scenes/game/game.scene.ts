@@ -131,7 +131,7 @@ export class GameScene extends SceneBase {
     tasksObject.addTask(
       "tavern",
       "Interrogate townsfolk in the tavern for where Jade was last seen",
-      false
+      true
     );
     // tasksObject.addTask(
     //   "altar",

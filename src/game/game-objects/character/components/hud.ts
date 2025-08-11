@@ -24,14 +24,15 @@ export class HudComponent {
     // Style objects
     const nameStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 24,
+      fontSize: 30,
       fontWeight: 'bold',
       fill: 0xffffff,
     });
 
     const roleStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 20,
+      fontSize: 25,
+      fontWeight: 'bold',
       fill: 0xffffff,
     });
 
@@ -57,8 +58,9 @@ export class HudComponent {
       text: "20/20",
       style: {
         fontFamily: 'Magra-Regular',
-        fontSize: 20,
+        fontSize: 28,
         fill: 0xffffff,
+        fontWeight: 'bold',
         dropShadow: true,
         dropShadowDistance: 2,
         dropShadowBlur: 2,
@@ -75,8 +77,8 @@ export class HudComponent {
   }
 
   refreshPosition() {
-    this.roleText.y = this.hpBar.y - this.hpBar.height - 10;
-    this.nameText.y = this.roleText.y - this.roleText.height - 10;
+    this.roleText.y = this.hpBar.y - this.hpBar.height + 7;
+    this.nameText.y = this.roleText.y - this.roleText.height - 5;
     const bounds = this.container.getBounds();
     this.container.x = this.x;
     this.container.y = this.y - bounds.height / 2;

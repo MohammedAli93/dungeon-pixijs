@@ -116,7 +116,7 @@ export class TitleGameObject {
     let yOffset = 0;
     const initialX = this.header.position.x - (this.header.width / 2);
     const initialY = this.header.position.y;
-    const spaceWidth = 1.8;
+    const spaceWidth = 5;
 
     for (let i = 0; i < words.length; i++) {
       const word = words[i];
@@ -140,7 +140,7 @@ export class TitleGameObject {
       gsap.to(text, {
         duration: Math.min(duration, 0.5),
         pixi: {
-          positionY: text.position.y - this.header.height / 2,
+          // positionY: text.position.y - this.header.height / 2,
           alpha: 1,
         },
       });
@@ -192,7 +192,7 @@ export class TitleGameObject {
         fontSize: 20,
         fontFamily: "Magra-Regular",
         fill: 0xffffff,
-        fontStyle: "bold",
+
       },
       anchor: {
         x: 0.5,
