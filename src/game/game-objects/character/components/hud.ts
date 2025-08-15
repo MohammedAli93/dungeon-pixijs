@@ -24,14 +24,14 @@ export class HudComponent {
     // Style objects
     const nameStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 22,
+      fontSize: 25,
       fontWeight: 'bold',
       fill: 0xffffff,
     });
 
     const roleStyle = new PIXI.TextStyle({
       fontFamily: 'Magra-Regular',
-      fontSize: 16,
+      fontSize: 19,
       fontWeight: 'bold',
       fill: 0xffffff,
     });
@@ -50,7 +50,7 @@ export class HudComponent {
     this.hpBar = PIXI.Sprite.from('scenes.game.hp-bar');
     this.hpBar.position.y = -35;
     this.hpBar.anchor.set(0.5);
-    this.hpBar.scale.set(1.5); // 1.5x bigger in both width and height
+    this.hpBar.scale.set(1.3); // 1.5x bigger in both width and height
     this.container.addChild(this.hpBar);
 
     // @ts-ignore PIXI.Text is not typed correctly.
@@ -58,7 +58,7 @@ export class HudComponent {
       text: "20/20",
       style: {
         fontFamily: 'Magra-Regular',
-        fontSize: 18,
+        fontSize: 22,
         fill: 0xffffff,
         fontWeight: 'bold',
         dropShadow: true,
