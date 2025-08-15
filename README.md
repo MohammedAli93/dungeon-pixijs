@@ -56,16 +56,13 @@ import logoImg from "./assets/logo.png";
 To load static files such as audio files, videos, etc place them into the `public/assets` folder. Then you can use this path in the Loader calls within Pixi:
 
 ```js
-preload();
-{
-  //  This is an example of an imported bundled image.
-  //  Remember to import it at the top of this file
-  await PIXI.Assets.load({ alias: "logo", src: logoImg });
+//  This is an example of an imported bundled image.
+//  Remember to import it at the top of this file
+await PIXI.Assets.load({ alias: "logo", src: logoImg });
 
-  //  This is an example of loading a static image
-  //  from the public/assets folder:
-  await PIXI.Assets.load({ alias: "background", src: "assets/bg.png" });
-}
+//  This is an example of loading a static image
+//  from the public/assets folder:
+await PIXI.Assets.load({ alias: "background", src: "assets/bg.png" });
 ```
 
 When you issue the `npm run build` command, all static assets are automatically copied to the `dist/assets` folder.
