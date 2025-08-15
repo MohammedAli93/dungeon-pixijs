@@ -29,7 +29,7 @@ We have provided a default project structure to get you started. This is as foll
 | Path                     | Description                                                             |
 | ------------------------ | ----------------------------------------------------------------------- |
 | `index.html`             | A basic HTML page to contain the game.                                  |
-| `src`                    | Contains the React client source code.                                  |
+| `src`                    | Contains the client source code.                                        |
 | `src/main.ts`            | The main **Game** entry point.                                          |
 | `src/dom/`               | Contains logic to handle DOM elements.                                  |
 | `src/game/`              | Contains the game source code.                                          |
